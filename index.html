@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rickroll Shield</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --safe: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding-top: 40px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #60a5fa;
+        }
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+        .input-area {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+        }
+        input {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: 2px solid #334155;
+            background: #0f172a;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 16px;
+            margin-top: 15px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .result {
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: none;
+        }
+        .safe {
+            background: var(--safe);
+            color: white;
+        }
+        .danger {
+            background: var(--danger);
+            color: white;
+        }
+        .warning {
+            background: var(--warning);
+            color: black;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+    </style>
+    <!-- PWA-enkle instillinger -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="theme-color" content="#0f172a">
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ Rickroll Shield</h1>
+        <p class="subtitle">Beskytt deg selv før du Rickroller andre</p>
+        
+        <div class="input-area">
+            <input type="text" id="urlInput" placeholder="Lim inn mistenkelig lenke her...">
+            <button id="checkBtn">Sjekk for Rickroll</button>
+        </div>
+        
+        <div id="resultBox" class="result"></div>
+        
+        <div class="footer">
+            Laget med humor og litt JavaScript<br>
+            Versjon 0.1 – "Never Gonna Give You Up"-modus
+        </div>
+    </div>
+
+    <script>
+        // Database med kjente Rickroll-URL-er (kan utvides)
+        const rickrollUrls = [
+            "youtube.com/watch?v=dQw4w9WgXcQ",
+            "youtu.be/dQw4w9WgXcQ",
+            "bit.ly/3t0x1mz",
+            "tinyurl.com/rickroll",
+            "youtube.com/watch?v=oHg5SJYRHA0",
+            "youtube.com/watch?v=DLzxrzFCyOs",
+            "youtube.com/watch?v=ub82Xb1C8os",
+            "rickroll.it",
+            "rickastley.co.uk",
+            "nevergonnagiveyouup.com",
+            "gg.gg/rickroll",
+            "shorturl.at/rickroll",
+            "is.gd/rickroll",
+            "soo.gd/rickroll"
+        ];
+
+        // Funksjon for å normalisere URL
+        function normalizeUrl(url) {
+            return url.toLowerCase().replace('https://', '').replace('http://', '').replace('www.', '').split('?')[0];
+        }
+
+        // Hovedfunksjon for å sjekke
+        function checkForRickroll(url) {
+            const normalized = normalizeUrl(url);
+            
+            // Sjekk mot listen
+            for (const rickUrl of rickrollUrls) {
+                if (normalized.includes(rickUrl)) {
+                    return { isRickroll: true, matched: rickUrl };
+                }
+            }
+            
+            // Heuristikk: mistenkelige nøkkelord
+            const suspiciousKeywords = ['rick', 'nevergonna', 'giveyouup', 'astley', 'roll'];
+            for (const keyword of suspiciousKeywords) {
+                if (normalized.includes(keyword)) {
+                    return { isRickroll: 'suspicious', keyword: keyword };
+                }
+            }
+            
+            return { isRickroll: false };
+        }
+
+        // DOM-elementer
+        const input = document.getElementById('urlInput');
+        const checkBtn = document.getElementById('checkBtn');
+        const resultBox = document.getElementById('resultBox');
+
+        // Hendelseshåndterer
+        checkBtn.addEventListener('click', () => {
+            const url = input.value.trim();
+            if (!url) {
+                alert('Lim inn en URL først!');
+                return;
+            }
+
+            const result = checkForRickroll(url);
+            resultBox.style.display = 'block';
+            
+            if (result.isRickroll === true) {
+                resultBox.className = 'result danger';
+                resultBox.innerHTML = `🚨 RICKROLL FUNNET!<br><small>Matchet: ${result.matched}</small>`;
+            } else if (result.isRickroll === 'suspicious') {
+                resultBox.className = 'result warning';
+                resultBox.innerHTML = `⚠️ MISTENKELIG<br><small>Inneholder: "${result.keyword}"</small>`;
+            } else {
+                resultBox.className = 'result safe';
+                resultBox.innerHTML = '✅ SER TRYGG UT!<br><small>(Men vær alltid forsiktig)</small>';
+            }
+        });
+
+        // Tillat Enter-trykk
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
