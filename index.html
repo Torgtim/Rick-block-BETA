@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rickroll Shield PRO+</title>
+    <title>Rickroll Shield PRO+ ULTRA</title>
     <style>
         :root {
             --bg: #0f172a;
@@ -14,6 +14,7 @@
             --warning: #f59e0b;
             --primary: #3b82f6;
             --editor: #7c3aed;
+            --text-mode: #ec4899;
         }
         * {
             box-sizing: border-box;
@@ -34,7 +35,7 @@
         }
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             padding: 25px 20px;
             background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
             border-radius: 20px;
@@ -67,6 +68,49 @@
             max-width: 500px;
             margin: 0 auto;
         }
+        
+        /* MODE TOGGLE STYLES */
+        .mode-toggle-container {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .mode-toggle {
+            display: inline-flex;
+            background: #334155;
+            padding: 5px;
+            border-radius: 50px;
+            margin-bottom: 10px;
+        }
+        .mode-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 40px;
+            background: transparent;
+            color: #94a3b8;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        .mode-btn[data-mode="advanced"].active {
+            background: var(--text-mode);
+        }
+        .mode-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         .main-card {
             background: var(--card);
             border-radius: 20px;
@@ -84,7 +128,7 @@
             flex-direction: column;
             gap: 15px;
         }
-        input {
+        input, textarea {
             padding: 18px;
             border-radius: 12px;
             border: 2px solid #475569;
@@ -92,11 +136,20 @@
             color: white;
             font-size: 1.1rem;
             transition: border 0.3s;
+            font-family: inherit;
         }
-        input:focus {
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        .text-input:focus {
+            border-color: var(--text-mode);
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.3);
         }
         .button-group {
             display: flex;
@@ -122,6 +175,15 @@
             background: #2563eb;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+        }
+        .text-mode-btn {
+            background: var(--text-mode);
+            color: white;
+        }
+        .text-mode-btn:hover {
+            background: #db2777;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(219, 39, 119, 0.4);
         }
         .secondary-btn {
             background: #475569;
@@ -177,9 +239,14 @@
             50% { transform: scale(1.02); }
         }
         .warning {
-            background: var (--warning);
+            background: var(--warning);
             color: black;
             border-color: #d97706;
+        }
+        .text-warning {
+            background: var(--text-mode);
+            color: white;
+            border-color: #db2777;
         }
         .stats {
             display: flex;
@@ -222,6 +289,7 @@
         .history-safe { border-left-color: var(--safe); }
         .history-danger { border-left-color: var(--danger); }
         .history-warning { border-left-color: var(--warning); }
+        .history-text { border-left-color: var(--text-mode); }
         footer {
             text-align: center;
             margin-top: 50px;
@@ -239,7 +307,7 @@
             display: none;
             margin-top: 30px;
         }
-        textarea {
+        .editor-textarea {
             width: 100%;
             height: 300px;
             font-family: 'Courier New', monospace;
@@ -252,7 +320,7 @@
             resize: vertical;
             line-height: 1.4;
         }
-        textarea:focus {
+        .editor-textarea:focus {
             outline: none;
             border-color: var(--editor);
         }
@@ -299,6 +367,9 @@
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
+        .text-input-section {
+            border-color: var(--text-mode);
+        }
     </style>
     <!-- PWA Metadata -->
     <link rel="manifest" href="manifest.json">
@@ -314,11 +385,23 @@
     
     <div class="container">
         <header>
-            <div class="version-badge">PRO+ 2.0</div>
-            <h1>🛡️ Rickroll Shield PRO+</h1>
-            <p class="subtitle">Automatisk lagring • Redigerbar database • Over 50+ mønstre</p>
+            <div class="version-badge">ULTRA 3.0</div>
+            <h1>🛡️ Rickroll Shield ULTRA</h1>
+            <p class="subtitle">Standard & Avansert modus • Automatisk lagring • Tekstanalyse</p>
         </header>
         
+        <!-- MODE TOGGLE -->
+        <div class="mode-toggle-container">
+            <div class="mode-toggle">
+                <button class="mode-btn active" data-mode="standard">🛡️ Standard</button>
+                <button class="mode-btn" data-mode="advanced">⚡ Avansert</button>
+            </div>
+            <p class="mode-description" id="modeDesc">
+                Standard: Sjekker kun lenker. Raskt og enkelt.
+            </p>
+        </div>
+        
+        <!-- URL INPUT SECTION (Alltid synlig) -->
         <div class="main-card">
             <div class="input-group">
                 <input type="text" id="urlInput" placeholder="Lim inn mistenkelig lenke her...">
@@ -352,6 +435,28 @@
             </div>
         </div>
         
+        <!-- TEXT INPUT SECTION (Kun i Avansert modus) -->
+        <div class="main-card text-input-section" id="textSection" style="display: none;">
+            <h3>🔤 Tekstanalyse (Avansert modus)</h3>
+            <p style="opacity: 0.8; margin-bottom: 15px;">
+                Lim inn tekst for å sjekke etter skjulte Rickrolls, video-IDer eller mistenkelige fraser.
+            </p>
+            
+            <textarea id="textInput" placeholder="Eksempel: 'Hei, sjekk denne videoen: dQw4w9WgXcQ eller gå til bit.ly/3t0x1mz for en overraskelse!'" class="text-input"></textarea>
+            
+            <div class="button-group">
+                <button id="checkTextBtn" class="text-mode-btn">🔤 Analyser tekst</button>
+                <button id="clearTextBtn" class="secondary-btn">🗑️ Tøm tekst</button>
+            </div>
+            
+            <div id="textResultBox" class="result-box" style="display: none; margin-top: 20px;">
+                <span id="textResultEmoji" class="emoji-large">📝</span>
+                <div id="textResultText">Tekstanalyse resultat</div>
+                <div id="textResultDetail" style="font-size: 0.9rem; margin-top: 10px; opacity: 0.9;"></div>
+            </div>
+        </div>
+        
+        <!-- HISTORY SECTION -->
         <div class="main-card history-section">
             <h2>📜 Sjekkhistorikk (Lagret automatisk)</h2>
             <div id="historyList"></div>
@@ -360,7 +465,7 @@
             </p>
         </div>
         
-        <!-- EDITOR SECTION (skjult som standard) -->
+        <!-- EDITOR SECTION -->
         <div class="main-card editor-section" id="editorSection">
             <h2>⚙️ Rediger Rickroll-database</h2>
             <p style="opacity: 0.8; margin-bottom: 15px;">
@@ -368,7 +473,7 @@
                 Lagres automatisk når du trykker "Lagre database".
             </p>
             
-            <textarea id="databaseEditor" placeholder="youtube.com/watch?v=dQw4w9WgXcQ
+            <textarea id="databaseEditor" class="editor-textarea" placeholder="youtube.com/watch?v=dQw4w9WgXcQ
 youtu.be/dQw4w9WgXcQ
 bit.ly/3t0x1mz
 tinyurl.com/rickroll
@@ -390,7 +495,7 @@ tinyurl.com/rickroll
         </div>
         
         <footer>
-            Laget med ❤️ og litt JavaScript | Versjon 2.0 "Never Gonna Give You Up"<br>
+            Laget med ❤️ og litt JavaScript | Versjon 3.0 "Never Gonna Give You Up"<br>
             Alle innstillinger lagres automatisk i nettleseren
         </footer>
     </div>
@@ -460,6 +565,17 @@ tinyurl.com/rickroll
             'gratis', 'hemmelig', 'eksklusiv', 'nødlast', 'win', 'free'
         ];
 
+        // Tekstanalyse nøkkelord
+        const TEXT_KEYWORDS = [
+            { word: 'rickroll', confidence: 80 },
+            { word: 'rick astley', confidence: 85 },
+            { word: 'never gonna give you up', confidence: 90 },
+            { word: 'never gonna let you down', confidence: 85 },
+            { word: 'together forever', confidence: 75 },
+            { word: 'know the rules', confidence: 70 },
+            { word: 'and so do i', confidence: 70 }
+        ];
+
         // App state
         let rickrollDatabase = [];
         let suspiciousKeywords = [];
@@ -467,6 +583,7 @@ tinyurl.com/rickroll
         let totalChecks = 0;
         let rickrollsFound = 0;
         let isEditorOpen = false;
+        let currentMode = 'standard';
 
         // DOM elementer
         const elements = {
@@ -485,11 +602,180 @@ tinyurl.com/rickroll
             patternCount: document.getElementById('patternCount'),
             editorSection: document.getElementById('editorSection'),
             databaseEditor: document.getElementById('databaseEditor'),
-            notification: document.getElementById('notification')
+            notification: document.getElementById('notification'),
+            modeDesc: document.getElementById('modeDesc'),
+            textSection: document.getElementById('textSection'),
+            textInput: document.getElementById('textInput'),
+            checkTextBtn: document.getElementById('checkTextBtn'),
+            clearTextBtn: document.getElementById('clearTextBtn'),
+            textResultBox: document.getElementById('textResultBox'),
+            textResultEmoji: document.getElementById('textResultEmoji'),
+            textResultText: document.getElementById('textResultText'),
+            textResultDetail: document.getElementById('textResultDetail')
         };
 
         // ============================================
-        // LAGRINGS-FUNKSJONER
+        // MODUS-HÅNDTERING
+        // ============================================
+        
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // Oppdater toggle-knapper
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+            
+            // Vis/skjul tekst-seksjon
+            if (mode === 'advanced') {
+                elements.textSection.style.display = 'block';
+                elements.modeDesc.textContent = 'Avansert: Sjekker både lenker og tekst. Fang skjulte Rickrolls!';
+            } else {
+                elements.textSection.style.display = 'none';
+                elements.textResultBox.style.display = 'none';
+                elements.modeDesc.textContent = 'Standard: Sjekker kun lenker. Raskt og enkelt.';
+            }
+            
+            // Lagre valgt modus
+            localStorage.setItem('rickrollMode', mode);
+            showNotification(`Modus endret til: ${mode === 'advanced' ? 'Avansert' : 'Standard'}`, 'primary');
+        }
+
+        function loadMode() {
+            const savedMode = localStorage.getItem('rickrollMode') || 'standard';
+            setMode(savedMode);
+            return savedMode;
+        }
+
+        // ============================================
+        // TEKSTANALYSE-FUNKSJONER
+        // ============================================
+        
+        function analyzeText(text) {
+            const results = [];
+            const lowerText = text.toLowerCase();
+            
+            // 1. Sjekk for video-ID (100% sikker)
+            if (lowerText.includes('dqw4w9wgxcq')) {
+                results.push({
+                    type: 'VIDEO_ID',
+                    message: 'Rickroll video-ID (dQw4w9WgXcQ) funnet i tekst',
+                    confidence: 95,
+                    severity: 'danger'
+                });
+            }
+            
+            // 2. Sjekk for Rickroll-nøkkelord i tekst
+            TEXT_KEYWORDS.forEach(keyword => {
+                if (lowerText.includes(keyword.word)) {
+                    results.push({
+                        type: 'KEYWORD',
+                        message: `Rickroll-nøkkelord: "${keyword.word}"`,
+                        confidence: keyword.confidence,
+                        severity: 'warning'
+                    });
+                }
+            });
+            
+            // 3. Finn og sjekk lenker i teksten
+            const urlRegex = /(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/gi;
+            const urls = text.match(urlRegex) || [];
+            
+            urls.forEach(url => {
+                const result = checkForRickroll(url);
+                if (result.isRickroll) {
+                    results.push({
+                        type: 'HIDDEN_URL',
+                        message: `Skjult Rickroll-lenke: ${url.substring(0, 50)}`,
+                        confidence: result.confidence,
+                        url: url,
+                        severity: 'danger'
+                    });
+                } else if (result.isRickroll === 'SUSPICIOUS') {
+                    results.push({
+                        type: 'SUSPICIOUS_URL',
+                        message: `Mistenkelig lenke: ${url.substring(0, 50)}`,
+                        confidence: result.confidence,
+                        url: url,
+                        severity: 'warning'
+                    });
+                }
+            });
+            
+            // 4. Sjekk for mistenkelige fraser
+            const suspiciousPhrases = [
+                { phrase: 'klikk her', confidence: 60 },
+                { phrase: 'gratis nedlasting', confidence: 70 },
+                { phrase: 'hemmelig lenke', confidence: 75 },
+                { phrase: 'overraskelse', confidence: 50 }
+            ];
+            
+            suspiciousPhrases.forEach(phrase => {
+                if (lowerText.includes(phrase.phrase)) {
+                    results.push({
+                        type: 'SUSPICIOUS_PHRASE',
+                        message: `Mistenkelig frase: "${phrase.phrase}"`,
+                        confidence: phrase.confidence,
+                        severity: 'warning'
+                    });
+                }
+            });
+            
+            return results;
+        }
+
+        function displayTextResults(results) {
+            if (results.length === 0) {
+                elements.textResultEmoji.textContent = '✅';
+                elements.textResultText.textContent = 'Ingen Rickrolls funnet i teksten';
+                elements.textResultDetail.textContent = 'Teksten ser trygg ut!';
+                elements.textResultBox.className = 'result-box safe';
+            } else {
+                // Sorter etter severity
+                results.sort((a, b) => {
+                    const severityOrder = { danger: 3, warning: 2, safe: 1 };
+                    return severityOrder[b.severity] - severityOrder[a.severity];
+                });
+                
+                const highestSeverity = results[0].severity;
+                
+                if (highestSeverity === 'danger') {
+                    elements.textResultEmoji.textContent = '🚨';
+                    elements.textResultText.textContent = `${results.length} Rickroll-indikatorer funnet!`;
+                    elements.textResultBox.className = 'result-box danger';
+                } else {
+                    elements.textResultEmoji.textContent = '⚠️';
+                    elements.textResultText.textContent = `${results.length} mistenkelige elementer funnet`;
+                    elements.textResultBox.className = 'result-box text-warning';
+                }
+                
+                // Lag detaljert liste
+                let detailHtml = '<div style="text-align: left; font-size: 0.9rem;">';
+                results.forEach((result, index) => {
+                    const severityIcon = result.severity === 'danger' ? '🔴' : '🟡';
+                    detailHtml += `${severityIcon} <strong>${result.type}:</strong> ${result.message} (${result.confidence}%)<br>`;
+                });
+                detailHtml += '</div>';
+                elements.textResultDetail.innerHTML = detailHtml;
+                
+                // Legg til i historikk
+                addToHistory(
+                    `Tekstanalyse (${results.length} funn)`,
+                    { 
+                        isRickroll: results.length > 0,
+                        type: 'TEXT_ANALYSIS',
+                        confidence: results.reduce((max, r) => Math.max(max, r.confidence), 0)
+                    },
+                    new Date().toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' }),
+                    highestSeverity === 'danger' ? '🚨' : '⚠️'
+                );
+            }
+            
+            elements.textResultBox.style.display = 'block';
+        }
+
+        // ============================================
+        // EKSISTERENDE FUNKSJONER (beholdt fra før)
         // ============================================
         
         function saveAllData() {
@@ -497,16 +783,15 @@ tinyurl.com/rickroll
                 const data = {
                     database: rickrollDatabase,
                     keywords: suspiciousKeywords,
-                    history: checkHistory.slice(0, 20), // Lagre maks 20
+                    history: checkHistory.slice(0, 20),
                     stats: {
                         totalChecks: totalChecks,
                         rickrollsFound: rickrollsFound,
                         lastUpdated: new Date().toISOString()
                     },
-                    version: "2.0"
+                    version: "3.0"
                 };
-                localStorage.setItem('rickrollShieldPRO_data', JSON.stringify(data));
-                console.log('Data lagret:', data.stats);
+                localStorage.setItem('rickrollShieldULTRA_data', JSON.stringify(data));
             } catch (e) {
                 console.error('Kunne ikke lagre data:', e);
             }
@@ -514,77 +799,50 @@ tinyurl.com/rickroll
 
         function loadAllData() {
             try {
-                const saved = localStorage.getItem('rickrollShieldPRO_data');
+                const saved = localStorage.getItem('rickrollShieldULTRA_data');
                 if (saved) {
                     const data = JSON.parse(saved);
                     
-                    // Last inn database
                     if (data.database && Array.isArray(data.database)) {
                         rickrollDatabase = data.database;
                     } else {
                         rickrollDatabase = [...DEFAULT_DATABASE];
                     }
                     
-                    // Last inn nøkkelord
                     if (data.keywords && Array.isArray(data.keywords)) {
                         suspiciousKeywords = data.keywords;
                     } else {
                         suspiciousKeywords = [...DEFAULT_KEYWORDS];
                     }
                     
-                    // Last inn historikk
                     if (data.history && Array.isArray(data.history)) {
                         checkHistory = data.history;
                     }
                     
-                    // Last inn statistikk
                     if (data.stats) {
                         totalChecks = data.stats.totalChecks || 0;
                         rickrollsFound = data.stats.rickrollsFound || 0;
                     }
                     
                     updateUI();
-                    showNotification('Innstillinger lastet fra lagring!', 'safe');
                     return true;
                 }
             } catch (e) {
                 console.error('Kunne ikke laste data:', e);
             }
             
-            // Bruk standard hvis ingen lagret data
             rickrollDatabase = [...DEFAULT_DATABASE];
             suspiciousKeywords = [...DEFAULT_KEYWORDS];
             updateUI();
-            showNotification('Bruker standard innstillinger', 'warning');
             return false;
         }
 
-        function clearAllData() {
-            if (confirm('Er du sikker? Dette vil slette ALL lagret data (database, historikk, statistikker).')) {
-                localStorage.removeItem('rickrollShieldPRO_data');
-                rickrollDatabase = [...DEFAULT_DATABASE];
-                suspiciousKeywords = [...DEFAULT_KEYWORDS];
-                checkHistory = [];
-                totalChecks = 0;
-                rickrollsFound = 0;
-                updateUI();
-                showNotification('Alle data slettet!', 'danger');
-            }
-        }
-
-        // ============================================
-        // DETEKSJONS-FUNKSJONER
-        // ============================================
-        
         function normalizeUrl(url) {
             if (!url) return '';
             
             let cleaned = url.toLowerCase().trim();
-            
-            // Fjern protokoll
             cleaned = cleaned.replace(/^https?:\/\//, '');
             
-            // Fjern vanlige subdomener
             const subdomains = ['www.', 'm.', 'mobile.', 'en.', 'de.', 'fr.', 'video.', 'watch.'];
             for (const sub of subdomains) {
                 if (cleaned.startsWith(sub)) {
@@ -593,17 +851,14 @@ tinyurl.com/rickroll
                 }
             }
             
-            // Fjern trailing slash og URL-parametere
             cleaned = cleaned.replace(/\/$/, '').split('?')[0].split('#')[0];
-            
             return cleaned;
         }
 
         function checkForRickroll(url) {
             const normalized = normalizeUrl(url);
             
-            // 1. Sjekk etter video-ID (100% match)
-            if (normalized.includes('dQw4w9WgXcQ')) {
+            if (normalized.includes('dqw4w9wgxcq')) {
                 return {
                     isRickroll: true,
                     type: 'CLASSIC_RICKROLL',
@@ -612,7 +867,6 @@ tinyurl.com/rickroll
                 };
             }
 
-            // 2. Sjekk mot database
             for (const pattern of rickrollDatabase) {
                 if (normalized.includes(pattern)) {
                     return {
@@ -624,7 +878,6 @@ tinyurl.com/rickroll
                 }
             }
 
-            // 3. Sjekk nøkkelord
             let foundKeywords = [];
             for (const keyword of suspiciousKeywords) {
                 if (normalized.includes(keyword)) {
@@ -648,7 +901,6 @@ tinyurl.com/rickroll
                 };
             }
 
-            // 4. Heuristikk
             if (normalized.length < 25 && normalized.includes('/')) {
                 const parts = normalized.split('/');
                 if (parts.length === 2 && parts[1].length < 10) {
@@ -661,7 +913,6 @@ tinyurl.com/rickroll
                 }
             }
 
-            // 5. Trygg
             return {
                 isRickroll: false,
                 type: 'SAFE',
@@ -670,10 +921,6 @@ tinyurl.com/rickroll
             };
         }
 
-        // ============================================
-        // UI-FUNKSJONER
-        // ============================================
-        
         function updateUI() {
             elements.totalChecks.textContent = totalChecks;
             elements.rickrollCount.textContent = rickrollsFound;
@@ -695,7 +942,6 @@ tinyurl.com/rickroll
             let text = 'Ukjent';
             let cssClass = 'warning';
             let detail = '';
-            let sound = null;
 
             if (result.isRickroll === true) {
                 emoji = '🚨';
@@ -703,8 +949,6 @@ tinyurl.com/rickroll
                 cssClass = 'danger';
                 detail = `${result.matched} | ${result.confidence}% sikker`;
                 rickrollsFound++;
-                // Spill lyd (valgfritt)
-                try { new Audio('https://assets.mixkit.co/sfx/preview/mixkit-warning-alarm-buzzer-958.mp3').play().catch(() => {}); } catch(e) {}
             } else if (result.isRickroll === 'SUSPICIOUS') {
                 emoji = '⚠️';
                 text = 'MISTENKELIG LENKE';
@@ -760,8 +1004,16 @@ tinyurl.com/rickroll
             
             checkHistory.forEach(item => {
                 const div = document.createElement('div');
-                const bgClass = item.result.isRickroll === true ? 'history-danger' : 
-                              item.result.isRickroll === 'SUSPICIOUS' ? 'history-warning' : 'history-safe';
+                let bgClass = 'history-warning';
+                
+                if (item.result.isRickroll === true) {
+                    bgClass = 'history-danger';
+                } else if (item.result.isRickroll === false) {
+                    bgClass = 'history-safe';
+                } else if (item.result.type === 'TEXT_ANALYSIS') {
+                    bgClass = 'history-text';
+                }
+                
                 div.className = `history-item ${bgClass}`;
                 
                 div.innerHTML = `
@@ -782,9 +1034,8 @@ tinyurl.com/rickroll
                     ` : ''}
                 `;
                 
-                // Klikk for å se full URL
                 div.addEventListener('click', () => {
-                    alert(`Full URL:\n${item.fullUrl}\n\nType: ${item.result.type}\nSikkerhet: ${item.result.confidence}%`);
+                    alert(`Full tekst/URL:\n${item.fullUrl}\n\nType: ${item.result.type}\nSikkerhet: ${item.result.confidence}%`);
                 });
                 
                 elements.historyList.appendChild(div);
@@ -795,7 +1046,9 @@ tinyurl.com/rickroll
             elements.notification.textContent = message;
             elements.notification.style.background = type === 'safe' ? 'var(--safe)' : 
                                                    type === 'warning' ? 'var(--warning)' : 
-                                                   type === 'danger' ? 'var(--danger)' : 'var(--primary)';
+                                                   type === 'danger' ? 'var(--danger)' : 
+                                                   type === 'primary' ? 'var(--primary)' : 
+                                                   type === 'editor' ? 'var(--editor)' : 'var(--text-mode)';
             elements.notification.style.display = 'block';
             
             setTimeout(() => {
@@ -832,7 +1085,7 @@ tinyurl.com/rickroll
                 return;
             }
             
-            rickrollDatabase = [...new Set(lines)]; // Fjern duplikater
+            rickrollDatabase = [...new Set(lines)];
             updateUI();
             saveAllData();
             showNotification(`Database lagret med ${rickrollDatabase.length} unike mønstre!`, 'safe');
@@ -951,7 +1204,6 @@ tinyurl.com/rickroll
                 return;
             }
             
-            // Valider URL format
             if (!url.includes('.') || url.length < 10) {
                 showNotification('Dette ser ikke ut som en gyldig URL', 'warning');
                 return;
@@ -959,6 +1211,23 @@ tinyurl.com/rickroll
             
             const result = checkForRickroll(url);
             displayResult(url, result);
+        }
+
+        function performTextCheck() {
+            const text = elements.textInput.value.trim();
+            
+            if (!text) {
+                showNotification('Vennligst skriv eller lim inn tekst først!', 'warning');
+                return;
+            }
+            
+            if (text.length < 5) {
+                showNotification('Teksten er for kort for analyse', 'warning');
+                return;
+            }
+            
+            const results = analyzeText(text);
+            displayTextResults(results);
         }
 
         function clearHistoryUI() {
@@ -975,22 +1244,45 @@ tinyurl.com/rickroll
             }
         }
 
+        function clearText() {
+            elements.textInput.value = '';
+            elements.textResultBox.style.display = 'none';
+            showNotification('Tekstfelt tømt', 'primary');
+        }
+
         // ============================================
         // INITIERING OG EVENT HANDLERS
         // ============================================
         
         function init() {
-            // Last inn data
+            // Last inn data og modus
             loadAllData();
+            loadMode();
             
-            // Event listeners
+            // Mode toggle event listeners
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setMode(btn.dataset.mode);
+                });
+            });
+            
+            // Event listeners for URL-sjekk
             elements.checkBtn.addEventListener('click', performCheck);
             elements.testBtn.addEventListener('click', testRandomRickroll);
             elements.clearBtn.addEventListener('click', clearHistoryUI);
             
+            // Event listeners for tekstanalyse
+            elements.checkTextBtn.addEventListener('click', performTextCheck);
+            elements.clearTextBtn.addEventListener('click', clearText);
+            
+            // Enter-trykk i input-feltene
             elements.urlInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    performCheck();
+                if (e.key === 'Enter') performCheck();
+            });
+            
+            elements.textInput.addEventListener('keypress', (e) => {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    performTextCheck();
                 }
             });
             
@@ -1001,12 +1293,12 @@ tinyurl.com/rickroll
                 }
             });
             
-            // Lagre periodisk hvert 30. sekund
+            // Lagre periodisk
             setInterval(saveAllData, 30000);
             
             // Vis velkomstmelding
             setTimeout(() => {
-                showNotification(`Rickroll Shield PRO+ klar! ${rickrollDatabase.length} mønstre lastet.`, 'safe');
+                showNotification(`Rickroll Shield ULTRA klar! ${rickrollDatabase.length} mønstre lastet.`, 'safe');
             }, 1000);
         }
 
