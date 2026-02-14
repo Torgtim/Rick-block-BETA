@@ -187,10 +187,6 @@
             transition: border 0.3s;
             font-family: inherit;
         }
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
         input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
@@ -482,7 +478,7 @@
             </p>
         </div>
         
-        <!-- YOUTUBE TOGGLE (KUN PÅ TOPPEN) -->
+        <!-- YOUTUBE TOGGLE -->
         <div class="youtube-toggle-container">
             <div class="youtube-toggle">
                 <button class="youtube-toggle-btn" id="youtubeToggle">▶️ YouTube Mode AV</button>
@@ -492,7 +488,7 @@
             </p>
         </div>
         
-        <!-- MAIN CARD (Blir rød når YouTube Mode er PÅ) -->
+        <!-- MAIN CARD -->
         <div class="main-card" id="mainCard">
             <div class="main-card-header">
                 <h3 id="mainCardTitle">🔍 Lenkesjekk</h3>
@@ -500,12 +496,12 @@
             </div>
             
             <div class="input-group">
-                <input type="text" id="urlInput" placeholder="Lim inn mistenkelig lenke eller YouTube-URL her...">
+                <input type="text" id="urlInput" placeholder="Lim inn mistenkelig lenke her...">
                 
                 <div class="button-group">
-                    <button id="checkBtn" class="primary-btn" id="mainActionBtn">🔍 Sjekk</button>
+                    <button id="checkBtn" class="primary-btn">🔍 Sjekk</button>
                     <button id="testBtn" class="secondary-btn">🎯 Test</button>
-                    <button id="clearBtn" class="danger-btn">🗑️ Tøm</button>
+                    <button id="clearBtn" class="danger-btn">🗑️ Tøm historikk</button>
                 </div>
             </div>
             
@@ -586,13 +582,13 @@ tinyurl.com/rickroll
             
             <div style="margin-top: 20px; font-size: 0.9rem; opacity: 0.7;">
                 <strong>Tips:</strong> Bruk bare domenenavn og sti. "https://" og "www." fjernes automatisk.
-                Eksempel: "mitt-domene.no/rickroll" vil fange alle varianter av det domet.
+                Eksempel: "mitt-domene.no/rickroll" vil fange alle varianter av det domenet.
             </div>
         </div>
         
         <footer>
-            Laget med ❤️ og litt JavaScript | Versjon 5.0 "YouTube Mode"<br>
-            YouTube Mode gjør hovedboksen om til YouTube-scanner!
+            Laget med ❤️ og litt JavaScript | Versjon 5.2 "Fully Fixed"<br>
+            Vanlige lenker fungerer + YouTube scanner tittel/kanal!
         </footer>
     </div>
 
@@ -680,7 +676,7 @@ tinyurl.com/rickroll
         let rickrollsFound = 0;
         let isEditorOpen = false;
         let currentMode = 'standard';
-        let youtubeMode = false; // NY: YouTube Mode state
+        let youtubeMode = false;
 
         // DOM elementer
         const elements = {
@@ -747,41 +743,32 @@ tinyurl.com/rickroll
         }
 
         // ============================================
-        // YOUTUBE MODE FUNKSJONER (NY!)
+        // YOUTUBE MODE FUNKSJONER
         // ============================================
         
         function toggleYoutubeMode() {
             youtubeMode = !youtubeMode;
             
-            const btn = elements.youtubeToggle;
-            
             if (youtubeMode) {
-                btn.textContent = '⏸️ YouTube Mode PÅ';
-                btn.classList.add('active');
+                elements.youtubeToggle.textContent = '⏸️ YouTube Mode PÅ';
+                elements.youtubeToggle.classList.add('active');
                 elements.youtubeDesc.textContent = 'YouTube Mode er PÅ! Hovedboksen scanner nå YouTube-videoer.';
-                
-                // Gjør hovedboksen rød
                 elements.mainCard.classList.add('youtube-active');
-                elements.mainCardTitle.innerHTML = '🎥 YouTube Scanner <span style="font-size: 0.8rem; margin-left: 10px; color: #ff0000;">(PÅ)</span>';
+                elements.mainCardTitle.innerHTML = '🎥 YouTube Scanner';
                 elements.youtubeIndicator.style.display = 'inline-block';
                 elements.urlInput.placeholder = 'Lim inn YouTube URL eller video-ID...';
-                
-                showNotification('🎥 YouTube Mode AKTIVERT! Hovedboksen scanner nå YouTube', 'success');
+                showNotification('🎥 YouTube Mode AKTIVERT!', 'success');
             } else {
-                btn.textContent = '▶️ YouTube Mode AV';
-                btn.classList.remove('active');
+                elements.youtubeToggle.textContent = '▶️ YouTube Mode AV';
+                elements.youtubeToggle.classList.remove('active');
                 elements.youtubeDesc.textContent = 'YouTube Mode er AV. Skru på for å gjøre hovedboksen om til YouTube-scanner.';
-                
-                // Tilbakestill hovedboksen
                 elements.mainCard.classList.remove('youtube-active');
                 elements.mainCardTitle.innerHTML = '🔍 Lenkesjekk';
                 elements.youtubeIndicator.style.display = 'none';
                 elements.urlInput.placeholder = 'Lim inn mistenkelig lenke her...';
-                
                 showNotification('YouTube Mode deaktivert', 'warning');
             }
             
-            // Lagre innstilling
             localStorage.setItem('youtubeMode', youtubeMode ? 'on' : 'off');
         }
 
@@ -789,13 +776,12 @@ tinyurl.com/rickroll
             const saved = localStorage.getItem('youtubeMode');
             youtubeMode = saved === 'on';
             
-            // Oppdater UI
             if (youtubeMode) {
                 elements.youtubeToggle.textContent = '⏸️ YouTube Mode PÅ';
                 elements.youtubeToggle.classList.add('active');
                 elements.youtubeDesc.textContent = 'YouTube Mode er PÅ! Hovedboksen scanner nå YouTube-videoer.';
                 elements.mainCard.classList.add('youtube-active');
-                elements.mainCardTitle.innerHTML = '🎥 YouTube Scanner <span style="font-size: 0.8rem; margin-left: 10px; color: #ff0000;">(PÅ)</span>';
+                elements.mainCardTitle.innerHTML = '🎥 YouTube Scanner';
                 elements.youtubeIndicator.style.display = 'inline-block';
                 elements.urlInput.placeholder = 'Lim inn YouTube URL eller video-ID...';
             } else {
@@ -810,102 +796,85 @@ tinyurl.com/rickroll
         }
 
         // ============================================
-        // YOUTUBE SCANNING FUNKSJONER
+        // YOUTUBE SCANNING - FORBEDRET!
         // ============================================
         
         function scanYouTubeVideo(url) {
             showNotification('🎥 Scanner YouTube-video...', 'primary');
             
-            // Hent video-ID fra URL
+            // Hent video-ID
             let videoId = url;
-            
             if (url.includes('youtube.com/watch?v=')) {
                 videoId = url.split('v=')[1].split('&')[0];
             } else if (url.includes('youtu.be/')) {
                 videoId = url.split('youtu.be/')[1].split('?')[0];
             }
             
-            // SJEKK MOT DATABASEN
-            const result = checkForRickroll('youtube.com/watch?v=' + videoId);
+            // 1. SJEKK VIDEO-ID MOT DATABASEN
+            const idResult = checkForRickroll('youtube.com/watch?v=' + videoId);
             
-            if (result.isRickroll) {
-                displayResult(url, {
-                    isRickroll: true,
-                    type: 'YOUTUBE_RICKROLL',
-                    matched: result.matched,
-                    confidence: 100
-                });
-                return;
-            }
-            
-            // Hvis vi ikke er på YouTube-siden, bare sjekk video-ID
-            if (!window.location.hostname.includes('youtube.com')) {
-                if (videoId === 'dQw4w9WgXcQ') {
-                    displayResult(url, {
-                        isRickroll: true,
-                        type: 'YOUTUBE_RICKROLL',
-                        matched: 'Klassisk Rickroll video-ID',
-                        confidence: 100
-                    });
-                } else {
-                    displayResult(url, {
-                        isRickroll: false,
-                        type: 'SAFE',
-                        matched: null,
-                        confidence: 0
-                    });
-                }
-                return;
-            }
-            
-            // Hvis vi ER på YouTube, scan tittel, beskrivelse etc.
+            // 2. SCAN TITTEL OG KANAL (hvis vi er på YouTube)
             setTimeout(() => {
-                let allResults = [];
+                let allFindings = [];
                 let details = [];
                 
-                // Scan tittel
+                // Video-ID sjekk
+                if (idResult.isRickroll) {
+                    allFindings.push({
+                        type: 'VIDEO_ID',
+                        message: 'Video-ID matcher Rickroll',
+                        confidence: 100
+                    });
+                    details.push('🎬 Video-ID er Rickroll!');
+                }
+                
+                // TITTEL
                 const titleElement = document.querySelector('h1 yt-formatted-string');
                 if (titleElement) {
                     const title = titleElement.textContent;
-                    const titleResults = analyzeText(title);
-                    if (titleResults.length > 0) {
-                        allResults.push(...titleResults);
-                        details.push('🎬 Tittel: ' + titleResults.length + ' funn');
+                    if (title.toLowerCase().includes('rick astley') || 
+                        title.toLowerCase().includes('never gonna') ||
+                        title.toLowerCase().includes('rickroll')) {
+                        allFindings.push({
+                            type: 'TITLE',
+                            message: 'Mistenkelig tittel',
+                            confidence: 80
+                        });
+                        details.push('📺 Tittel inneholder Rickroll-ord');
                     }
                 }
                 
-                // Scan kanal
-                const channelElement = document.querySelector('#owner yt-formatted-string');
+                // KANAL
+                const channelElement = document.querySelector('#owner yt-formatted-string a');
                 if (channelElement) {
                     const channel = channelElement.textContent;
                     if (channel.toLowerCase().includes('rick astley')) {
-                        allResults.push({
+                        allFindings.push({
                             type: 'CHANNEL',
                             message: 'Kanal: Rick Astley',
-                            confidence: 90,
-                            severity: 'danger'
+                            confidence: 95
                         });
-                        details.push('📺 Kanal: Rick Astley');
+                        details.push('📡 Kanal er Rick Astley!');
                     }
                 }
                 
-                // Vis resultat
-                if (allResults.length > 0) {
+                // VIS RESULTAT
+                if (allFindings.length > 0) {
                     let detailHtml = '<div style="text-align: left;">';
                     details.forEach(d => detailHtml += '• ' + d + '<br>');
                     detailHtml += '</div>';
                     
                     displayResult(url, {
                         isRickroll: true,
-                        type: 'YOUTUBE_CONTENT',
+                        type: 'YOUTUBE_FOUND',
                         matched: detailHtml,
-                        confidence: 85
+                        confidence: 95
                     });
                 } else {
                     displayResult(url, {
                         isRickroll: false,
                         type: 'SAFE',
-                        matched: null,
+                        matched: 'Ingen Rickroll funnet i videoen',
                         confidence: 0
                     });
                 }
@@ -913,7 +882,7 @@ tinyurl.com/rickroll
         }
 
         // ============================================
-        // TEKSTANALYSE-FUNKSJONER
+        // TEKSTANALYSE
         // ============================================
         
         function analyzeText(text) {
@@ -984,7 +953,7 @@ tinyurl.com/rickroll
                 }
                 
                 let detailHtml = '<div style="text-align: left; font-size: 0.9rem;">';
-                results.forEach((result, index) => {
+                results.forEach(result => {
                     const severityIcon = result.severity === 'danger' ? '🔴' : '🟡';
                     detailHtml += `${severityIcon} <strong>${result.type}:</strong> ${result.message} (${result.confidence}%)<br>`;
                 });
@@ -995,7 +964,7 @@ tinyurl.com/rickroll
         }
 
         // ============================================
-        // Kjernefunksjoner
+        // KJERNEFUNKSJONER - FIKSET!
         // ============================================
         
         function normalizeUrl(url) {
@@ -1016,6 +985,7 @@ tinyurl.com/rickroll
         function checkForRickroll(url) {
             const normalized = normalizeUrl(url);
             
+            // Video-ID
             if (normalized.includes('dqw4w9wgxcq')) {
                 return {
                     isRickroll: true,
@@ -1025,6 +995,7 @@ tinyurl.com/rickroll
                 };
             }
 
+            // Database
             for (const pattern of rickrollDatabase) {
                 if (normalized.includes(pattern.toLowerCase())) {
                     return {
@@ -1036,6 +1007,7 @@ tinyurl.com/rickroll
                 }
             }
 
+            // Keywords
             let foundKeywords = [];
             for (const keyword of suspiciousKeywords) {
                 if (normalized.includes(keyword)) {
@@ -1068,7 +1040,7 @@ tinyurl.com/rickroll
         }
 
         // ============================================
-        // Database funksjoner
+        // DATABASE FUNKSJONER
         // ============================================
         
         function saveAllData() {
@@ -1082,7 +1054,7 @@ tinyurl.com/rickroll
                         rickrollsFound: rickrollsFound,
                         lastUpdated: new Date().toISOString()
                     },
-                    version: "5.0"
+                    version: "5.2"
                 };
                 localStorage.setItem('rickrollShieldULTRA_data', JSON.stringify(data));
             } catch (e) {
@@ -1239,19 +1211,17 @@ tinyurl.com/rickroll
             let emoji = '🤔';
             let text = 'Ukjent';
             let cssClass = 'warning';
-            let detail = '';
+            let detail = result.matched || '';
 
             if (result.isRickroll === true) {
                 emoji = '🚨';
                 text = 'RICKROLL FUNNET!';
                 cssClass = 'danger';
-                detail = result.matched || 'Rickroll oppdaget';
                 rickrollsFound++;
             } else if (result.isRickroll === 'SUSPICIOUS') {
                 emoji = '⚠️';
                 text = 'MISTENKELIG';
                 cssClass = 'warning';
-                detail = result.matched;
             } else {
                 emoji = '✅';
                 text = 'SER TRYGG UT';
@@ -1299,7 +1269,7 @@ tinyurl.com/rickroll
                 let bgClass = 'history-warning';
                 if (item.result.isRickroll === true) bgClass = 'history-danger';
                 else if (item.result.isRickroll === false) bgClass = 'history-safe';
-                else if (item.result.type === 'YOUTUBE_RICKROLL') bgClass = 'history-youtube';
+                else if (item.result.type && item.result.type.includes('YOUTUBE')) bgClass = 'history-youtube';
                 
                 div.className = `history-item ${bgClass}`;
                 div.innerHTML = `
@@ -1310,7 +1280,7 @@ tinyurl.com/rickroll
                     <div style="font-size: 0.85rem; word-break: break-all;">${item.url}</div>
                 `;
                 div.addEventListener('click', () => {
-                    alert(`Full URL:\n${item.fullUrl}\n\nType: ${item.result.type}`);
+                    alert(`Full URL:\n${item.fullUrl}\n\nType: ${item.result.type || 'Ukjent'}`);
                 });
                 elements.historyList.appendChild(div);
             });
@@ -1348,6 +1318,10 @@ tinyurl.com/rickroll
             performCheck();
         }
 
+        // ============================================
+        // HOVEDFUNKSJON - FIKSET!
+        // ============================================
+        
         function performCheck() {
             const input = elements.urlInput.value.trim();
             
@@ -1356,13 +1330,20 @@ tinyurl.com/rickroll
                 return;
             }
             
-            // YouTube Mode - bruk YouTube scanning
+            // HVIS YOUTUBE MODE ER PÅ
             if (youtubeMode) {
-                scanYouTubeVideo(input);
+                // Sjekk om det er en YouTube-lenke
+                if (input.includes('youtube.com') || input.includes('youtu.be')) {
+                    scanYouTubeVideo(input);
+                } else {
+                    // Hvis det ikke er YouTube-lenke, sjekk som vanlig
+                    const result = checkForRickroll(input);
+                    displayResult(input, result);
+                }
                 return;
             }
             
-            // Standard mode - sjekk som vanlig URL
+            // STANDARD MODE - sjekk som vanlig URL
             const result = checkForRickroll(input);
             displayResult(input, result);
         }
@@ -1400,7 +1381,7 @@ tinyurl.com/rickroll
         function init() {
             loadAllData();
             loadMode();
-            loadYoutubeMode(); // LAST YOUTUBE MODE!
+            loadYoutubeMode();
             
             // Mode toggle
             document.querySelectorAll('.mode-btn').forEach(btn => {
@@ -1428,7 +1409,6 @@ tinyurl.com/rickroll
                 if (e.ctrlKey && e.key === 'Enter') performTextCheck();
             });
             
-            // Lagre periodisk
             setInterval(saveAllData, 30000);
             
             setTimeout(() => {
