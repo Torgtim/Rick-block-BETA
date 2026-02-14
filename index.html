@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rickroll Shield ULTRA + YouTube</title>
+    <title>Rickroll Shield ULTRA + 3 Modes</title>
     <style>
         :root {
             --bg: #0f172a;
@@ -16,11 +16,8 @@
             --editor: #7c3aed;
             --text-mode: #ec4899;
             --youtube: #ff0000;
-            --youtube-off: #4b5563;
         }
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: var(--bg);
@@ -28,7 +25,6 @@
             margin: 0;
             padding: 20px;
             min-height: 100vh;
-            line-height: 1.6;
         }
         .container {
             max-width: 700px;
@@ -42,21 +38,13 @@
             background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
             border-radius: 20px;
             border: 2px solid #334155;
-            position: relative;
         }
         h1 {
             font-size: 2.5rem;
             margin: 10px 0;
             color: #60a5fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
         }
         .version-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
             background: var(--youtube);
             color: white;
             padding: 5px 12px;
@@ -64,112 +52,62 @@
             font-size: 0.8rem;
             font-weight: bold;
         }
-        .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 500px;
-            margin: 0 auto;
-        }
         
-        /* MODE TOGGLE STYLES */
-        .mode-toggle-container {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        .mode-toggle {
-            display: inline-flex;
-            background: #334155;
-            padding: 5px;
-            border-radius: 50px;
-            margin-bottom: 10px;
+        /* MODE TOGGLES */
+        .mode-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
         }
         .mode-btn {
-            padding: 10px 25px;
+            padding: 12px 25px;
             border: none;
             border-radius: 40px;
-            background: transparent;
+            background: #334155;
             color: #94a3b8;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            min-width: 120px;
         }
-        .mode-btn.active {
+        .mode-btn.active[data-mode="standard"] {
             background: var(--primary);
             color: white;
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
         }
-        .mode-btn[data-mode="advanced"].active {
+        .mode-btn.active[data-mode="advanced"] {
             background: var(--text-mode);
+            color: white;
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+        }
+        .mode-btn.active[data-mode="youtube"] {
+            background: var(--youtube);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
         }
         .mode-description {
+            text-align: center;
             font-size: 0.9rem;
-            opacity: 0.8;
-            max-width: 500px;
-            margin: 0 auto 10px;
+            color: #94a3b8;
+            margin-top: 10px;
             min-height: 40px;
         }
         
-        /* YOUTUBE TOGGLE STYLES */
-        .youtube-toggle-container {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(255, 0, 0, 0.1);
-            border-radius: 15px;
-            border: 2px solid #ff0000;
-        }
-        .youtube-toggle {
-            display: inline-block;
-        }
-        .youtube-toggle-btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 40px;
-            background: var(--youtube-off);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1rem;
-            min-width: 200px;
-        }
-        .youtube-toggle-btn.active {
-            background: var(--youtube);
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-            animation: youtubePulse 2s infinite;
-        }
-        @keyframes youtubePulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
-            50% { box-shadow: 0 0 40px rgba(255, 0, 0, 0.8); }
-        }
-        .youtube-description {
-            font-size: 0.9rem;
-            margin-top: 10px;
-            color: #94a3b8;
-        }
-        
-        /* MAIN CARD - kan bli rød når YouTube er på */
         .main-card {
             background: var(--card);
             border-radius: 20px;
             padding: 30px;
             margin-bottom: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             border: 2px solid #334155;
             transition: all 0.3s;
         }
         .main-card.youtube-active {
             border-color: var(--youtube);
             border-width: 3px;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
-            background: linear-gradient(135deg, #1e293b, #2d3748);
-        }
-        .main-card.youtube-active .main-card-header {
-            color: #ff0000;
-        }
-        .main-card:hover {
-            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
         }
         
         .input-group {
@@ -184,17 +122,6 @@
             background: #0f172a;
             color: white;
             font-size: 1.1rem;
-            transition: border 0.3s;
-            font-family: inherit;
-        }
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-        }
-        .text-input:focus {
-            border-color: var(--text-mode);
-            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.3);
         }
         .button-group {
             display: flex;
@@ -209,60 +136,17 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
             min-width: 120px;
         }
-        .primary-btn {
-            background: var(--primary);
-            color: white;
-        }
-        .primary-btn:hover {
-            background: #2563eb;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
-        }
-        .text-mode-btn {
-            background: var(--text-mode);
-            color: white;
-        }
-        .text-mode-btn:hover {
-            background: #db2777;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(219, 39, 119, 0.4);
-        }
-        .youtube-btn {
-            background: var(--youtube);
-            color: white;
-        }
-        .youtube-btn:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4);
-        }
-        .secondary-btn {
-            background: #475569;
-            color: white;
-        }
-        .secondary-btn:hover {
-            background: #64748b;
-        }
-        .danger-btn {
-            background: var(--danger);
-            color: white;
-        }
-        .danger-btn:hover {
-            background: #dc2626;
-        }
-        .editor-btn {
-            background: var(--editor);
-            color: white;
-        }
-        .editor-btn:hover {
-            background: #6d28d9;
-        }
-        .result-area {
-            margin-top: 30px;
-        }
+        .primary-btn { background: var(--primary); color: white; }
+        .primary-btn:hover { background: #2563eb; }
+        .text-mode-btn { background: var(--text-mode); color: white; }
+        .text-mode-btn:hover { background: #db2777; }
+        .youtube-btn { background: var(--youtube); color: white; }
+        .youtube-btn:hover { background: #dc2626; }
+        .secondary-btn { background: #475569; color: white; }
+        .danger-btn { background: var(--danger); color: white; }
+        
         .result-box {
             padding: 25px;
             border-radius: 15px;
@@ -271,43 +155,16 @@
             font-weight: bold;
             display: none;
             animation: fadeIn 0.5s;
-            border: 3px solid transparent;
+            margin-top: 20px;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .safe {
-            background: var(--safe);
-            color: white;
-            border-color: #059669;
-        }
-        .danger {
-            background: var(--danger);
-            color: white;
-            border-color: #dc2626;
-            animation: pulse 0.5s;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-        .warning {
-            background: var(--warning);
-            color: black;
-            border-color: #d97706;
-        }
-        .text-warning {
-            background: var(--text-mode);
-            color: white;
-            border-color: #db2777;
-        }
+        .safe { background: var(--safe); color: white; }
+        .danger { background: var(--danger); color: white; animation: pulse 0.5s; }
+        .warning { background: var(--warning); color: black; }
+        
         .stats {
             display: flex;
             justify-content: space-around;
             margin-top: 20px;
-            font-size: 0.9rem;
-            opacity: 0.9;
         }
         .stat-box {
             text-align: center;
@@ -320,11 +177,9 @@
             display: block;
             font-size: 1.8rem;
             font-weight: bold;
-            margin-top: 5px;
         }
-        .history-section {
-            margin-top: 40px;
-        }
+        
+        .history-section { margin-top: 40px; }
         .history-item {
             background: rgba(30, 41, 59, 0.5);
             padding: 15px;
@@ -332,59 +187,11 @@
             border-radius: 10px;
             border-left: 5px solid #475569;
             font-family: monospace;
-            word-break: break-all;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-        .history-item:hover {
-            background: rgba(30, 41, 59, 0.8);
-            transform: translateX(5px);
         }
         .history-safe { border-left-color: var(--safe); }
         .history-danger { border-left-color: var(--danger); }
-        .history-warning { border-left-color: var(--warning); }
-        .history-text { border-left-color: var(--text-mode); }
         .history-youtube { border-left-color: var(--youtube); }
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            font-size: 0.9rem;
-            opacity: 0.7;
-            padding: 20px;
-            border-top: 1px solid #334155;
-        }
-        .emoji-large {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .editor-section {
-            display: none;
-            margin-top: 30px;
-        }
-        .editor-textarea {
-            width: 100%;
-            height: 300px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            background: #0f172a;
-            color: #86efac;
-            border: 2px solid #475569;
-            border-radius: 10px;
-            padding: 15px;
-            resize: vertical;
-            line-height: 1.4;
-        }
-        .editor-textarea:focus {
-            outline: none;
-            border-color: var(--editor);
-        }
-        .editor-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
+        
         .floating-btn {
             position: fixed;
             bottom: 25px;
@@ -397,13 +204,6 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
-            z-index: 1000;
-            transition: all 0.3s;
-        }
-        .floating-btn:hover {
-            transform: scale(1.1) rotate(90deg);
-            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.7);
         }
         .notification {
             position: fixed;
@@ -413,91 +213,47 @@
             background: var(--safe);
             color: white;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             display: none;
             z-index: 2000;
-            animation: slideIn 0.3s;
         }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-        .text-input-section {
-            border-color: var(--text-mode);
-        }
-        .main-card-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .main-card-header h3 {
-            margin: 0;
-        }
-        .youtube-indicator {
-            background: var(--youtube);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-left: auto;
+        .editor-section { display: none; }
+        .editor-textarea {
+            width: 100%;
+            height: 200px;
+            background: #0f172a;
+            color: #86efac;
+            border: 2px solid #475569;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: monospace;
         }
     </style>
-    <!-- PWA Metadata -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0f172a">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
 </head>
 <body>
     <div class="notification" id="notification"></div>
-    
     <button class="floating-btn" onclick="toggleEditor()">✏️</button>
     
     <div class="container">
         <header>
-            <div class="version-badge">YouTube Mode</div>
+            <div class="version-badge">3 MODES</div>
             <h1>🛡️ Rickroll Shield ULTRA</h1>
-            <p class="subtitle">Standard • Avansert • YouTube Mode • Egne mønstre</p>
+            <p class="subtitle">Standard • Avansert • YouTube Mode</p>
         </header>
         
-        <!-- MODE TOGGLE -->
-        <div class="mode-toggle-container">
-            <div class="mode-toggle">
-                <button class="mode-btn active" data-mode="standard">🛡️ Standard</button>
-                <button class="mode-btn" data-mode="advanced">⚡ Avansert</button>
-            </div>
-            <p class="mode-description" id="modeDesc">
-                Standard: Sjekker kun lenker. Raskt og enkelt.
-            </p>
+        <!-- MODE SELECTOR - ALLE TRE! -->
+        <div class="mode-container">
+            <button class="mode-btn active" data-mode="standard">🛡️ Standard</button>
+            <button class="mode-btn" data-mode="advanced">⚡ Avansert</button>
+            <button class="mode-btn" data-mode="youtube">🎥 YouTube</button>
         </div>
-        
-        <!-- YOUTUBE TOGGLE -->
-        <div class="youtube-toggle-container">
-            <div class="youtube-toggle">
-                <button class="youtube-toggle-btn" id="youtubeToggle">▶️ YouTube Mode AV</button>
-            </div>
-            <p class="youtube-description" id="youtubeDesc">
-                YouTube Mode er AV. Skru på for å gjøre hovedboksen om til YouTube-scanner.
-            </p>
+        <div class="mode-description" id="modeDesc">
+            Standard: Sjekker kun lenker. Raskt og enkelt.
         </div>
         
         <!-- MAIN CARD -->
         <div class="main-card" id="mainCard">
-            <div class="main-card-header">
-                <h3 id="mainCardTitle">🔍 Lenkesjekk</h3>
-                <span class="youtube-indicator" id="youtubeIndicator" style="display: none;">🎥 YouTube Mode</span>
-            </div>
-            
             <div class="input-group">
-                <input type="text" id="urlInput" placeholder="Lim inn mistenkelig lenke her...">
-                
+                <input type="text" id="urlInput" placeholder="Lim inn lenke eller YouTube-URL...">
                 <div class="button-group">
                     <button id="checkBtn" class="primary-btn">🔍 Sjekk</button>
                     <button id="testBtn" class="secondary-btn">🎯 Test</button>
@@ -508,177 +264,81 @@
             <div id="resultBox" class="result-box">
                 <span id="resultEmoji" class="emoji-large">🤔</span>
                 <div id="resultText">Resultat vises her</div>
-                <div id="resultDetail" style="font-size: 1rem; margin-top: 10px; opacity: 0.9;"></div>
+                <div id="resultDetail" style="margin-top: 10px;"></div>
             </div>
             
             <div class="stats">
                 <div class="stat-box">
-                    Totalt sjekket<br>
-                    <span class="stat-value" id="totalChecks">0</span>
+                    Totalt<br><span class="stat-value" id="totalChecks">0</span>
                 </div>
                 <div class="stat-box">
-                    Rickrolls funnet<br>
-                    <span class="stat-value" id="rickrollCount">0</span>
+                    Rickrolls<br><span class="stat-value" id="rickrollCount">0</span>
                 </div>
                 <div class="stat-box">
-                    Mønstre<br>
-                    <span class="stat-value" id="patternCount">0</span>
+                    Mønstre<br><span class="stat-value" id="patternCount">0</span>
                 </div>
             </div>
         </div>
         
-        <!-- TEXT INPUT SECTION (Kun i Avansert modus) -->
-        <div class="main-card text-input-section" id="textSection" style="display: none;">
-            <h3>🔤 Tekstanalyse (Avansert modus)</h3>
-            <p style="opacity: 0.8; margin-bottom: 15px;">
-                Lim inn tekst for å sjekke etter skjulte Rickrolls, video-IDer eller mistenkelige fraser.
-            </p>
-            
-            <textarea id="textInput" placeholder="Eksempel: 'Hei, sjekk denne videoen: dQw4w9WgXcQ eller gå til bit.ly/3t0x1mz for en overraskelse!'" class="text-input"></textarea>
-            
-            <div class="button-group">
+        <!-- TEXT ANALYSIS SECTION (Kun i Avansert modus) -->
+        <div class="main-card" id="textSection" style="display: none;">
+            <h3>🔤 Tekstanalyse</h3>
+            <textarea id="textInput" rows="4" placeholder="Lim inn tekst for analyse..."></textarea>
+            <div class="button-group" style="margin-top: 15px;">
                 <button id="checkTextBtn" class="text-mode-btn">🔤 Analyser tekst</button>
                 <button id="clearTextBtn" class="secondary-btn">🗑️ Tøm tekst</button>
             </div>
-            
-            <div id="textResultBox" class="result-box" style="display: none; margin-top: 20px;">
-                <span id="textResultEmoji" class="emoji-large">📝</span>
-                <div id="textResultText">Tekstanalyse resultat</div>
-                <div id="textResultDetail" style="font-size: 0.9rem; margin-top: 10px; opacity: 0.9;"></div>
-            </div>
+            <div id="textResultBox" class="result-box" style="display: none;"></div>
         </div>
         
-        <!-- HISTORY SECTION -->
-        <div class="main-card history-section">
-            <h2>📜 Sjekkhistorikk (Lagret automatisk)</h2>
+        <!-- HISTORY -->
+        <div class="main-card">
+            <h2>📜 Sjekkhistorikk</h2>
             <div id="historyList"></div>
-            <p id="emptyHistory" style="text-align: center; opacity: 0.7; font-style: italic; padding: 20px;">
-                Ingen sjekker utført ennå. Prøv å sjekke en lenke!
-            </p>
+            <p id="emptyHistory" style="text-align: center; opacity: 0.7;">Ingen sjekker utført ennå</p>
         </div>
         
-        <!-- EDITOR SECTION -->
+        <!-- EDITOR -->
         <div class="main-card editor-section" id="editorSection">
             <h2>⚙️ Rediger Rickroll-database</h2>
-            <p style="opacity: 0.8; margin-bottom: 15px;">
-                Legg til, fjern eller rediger mønstre nedenfor. Én per linje.
-                Lagres automatisk når du trykker "Lagre database".
-            </p>
-            
-            <textarea id="databaseEditor" class="editor-textarea" placeholder="youtube.com/watch?v=dQw4w9WgXcQ
-youtu.be/dQw4w9WgXcQ
-bit.ly/3t0x1mz
-tinyurl.com/rickroll
-// Legg til dine egne mønstre her..."></textarea>
-            
-            <div class="editor-controls">
-                <button onclick="saveDatabase()" class="primary-btn">💾 Lagre database</button>
-                <button onclick="loadDatabase()" class="secondary-btn">📂 Last inn nåværende</button>
-                <button onclick="resetToDefault()" class="danger-btn">🔄 Tilbakestill</button>
-                <button onclick="addExample()" class="editor-btn">➕ Legg til eksempel</button>
-                <button onclick="exportDatabase()" class="secondary-btn">📤 Eksporter</button>
-                <button onclick="importDatabase()" class="secondary-btn">📥 Importer</button>
-            </div>
-            
-            <div style="margin-top: 20px; font-size: 0.9rem; opacity: 0.7;">
-                <strong>Tips:</strong> Bruk bare domenenavn og sti. "https://" og "www." fjernes automatisk.
-                Eksempel: "mitt-domene.no/rickroll" vil fange alle varianter av det domenet.
+            <textarea id="databaseEditor" class="editor-textarea" placeholder="Én per linje..."></textarea>
+            <div class="editor-controls" style="display: flex; gap: 10px; margin-top: 15px;">
+                <button onclick="saveDatabase()" class="primary-btn">💾 Lagre</button>
+                <button onclick="resetToDefault()" class="danger-btn">🔄 Reset</button>
             </div>
         </div>
-        
-        <footer>
-            Laget med ❤️ og litt JavaScript | Versjon 5.2 "Fully Fixed"<br>
-            Vanlige lenker fungerer + YouTube scanner tittel/kanal!
-        </footer>
     </div>
 
     <script>
         // ============================================
-        // KONFIGURASJON OG INITIELLE DATA
+        // DATABASE
         // ============================================
-        
-        // Standard database
         const DEFAULT_DATABASE = [
             "youtube.com/watch?v=dQw4w9WgXcQ",
             "youtu.be/dQw4w9WgXcQ",
-            "youtube.com/watch?v=oHg5SJYRHA0",
-            "youtube.com/watch?v=ub82Xb1C8os",
-            "youtube.com/watch?v=DLzxrzFCyOs",
-            "youtube.com/watch?v=ZZ5LpwO-An4",
             "bit.ly/3t0x1mz",
             "tinyurl.com/rickroll",
-            "tinyurl.com/never-gonna",
-            "bit.ly/rickroll2024",
-            "shorturl.at/rickroll",
-            "is.gd/rickroll",
-            "soo.gd/rickroll",
-            "gg.gg/rickroll",
-            "cutt.ly/rickroll",
-            "rb.gy/rickroll",
-            "shrtco.de/rick",
             "rickroll.it",
-            "rickastley.co.uk",
             "nevergonnagiveyouup.com",
-            "rickroll.com",
-            "rickrolled.com",
-            "youjustgotrickrolled.com",
-            "rickroll.org",
-            "rickrolled.org",
-            "therickroll.com",
-            "rickroll.digital",
-            "rickroll.space",
-            "rickroll.meme",
-            "rickroll.fun",
-            "rickroll.page",
-            "rickroll.club",
-            "rickroll.website",
-            "youtube.com/shorts/dQw4w9WgXcQ",
-            "youtube.com/embed/dQw4w9WgXcQ",
-            "youtube.com/v/dQw4w9WgXcQ",
-            "vimeo.com/rickroll",
-            "tiktok.com/@rickroll",
-            "instagram.com/p/rickroll",
-            "twitter.com/i/rickroll",
-            "fb.me/rickroll",
-            "1.1.1.1/rickroll",
-            "8.8.8.8/rickroll",
-            "free-minecraft.exe",
-            "free-robux.zip",
-            "april1-special.com",
-            "researchgate.net/publication/rickroll",
-            "mitt-domene.no/rickroll",
-            "falsk-nettside.com/gratis-spill"
+            "rickastley.co.uk"
         ];
 
-        const DEFAULT_KEYWORDS = [
-            'rick', 'astley', 'nevergonna', 'giveyouup', 'roll', 'rickroll',
-            'nevergonnaletyoudown', 'nevergonnarunaround', 'desertyou',
-            'makeyoucry', 'saygoodbye', 'tellalie', 'hurtyou',
-            'gratis', 'hemmelig', 'eksklusiv', 'nødlast', 'win', 'free'
-        ];
-
-        // Tekstanalyse nøkkelord
         const TEXT_KEYWORDS = [
             { word: 'rickroll', confidence: 80 },
             { word: 'rick astley', confidence: 85 },
             { word: 'never gonna give you up', confidence: 90 },
             { word: 'never gonna let you down', confidence: 85 },
-            { word: 'together forever', confidence: 75 },
-            { word: 'know the rules', confidence: 70 },
-            { word: 'and so do i', confidence: 70 }
+            { word: 'dqw4w9wgxcq', confidence: 100 }
         ];
 
-        // App state
-        let rickrollDatabase = [];
-        let suspiciousKeywords = [];
+        // State
+        let rickrollDatabase = [...DEFAULT_DATABASE];
         let checkHistory = [];
         let totalChecks = 0;
         let rickrollsFound = 0;
-        let isEditorOpen = false;
         let currentMode = 'standard';
-        let youtubeMode = false;
 
-        // DOM elementer
+        // DOM elements
         const elements = {
             urlInput: document.getElementById('urlInput'),
             checkBtn: document.getElementById('checkBtn'),
@@ -688,673 +348,184 @@ tinyurl.com/rickroll
             resultEmoji: document.getElementById('resultEmoji'),
             resultText: document.getElementById('resultText'),
             resultDetail: document.getElementById('resultDetail'),
-            historyList: document.getElementById('historyList'),
-            emptyHistory: document.getElementById('emptyHistory'),
             totalChecks: document.getElementById('totalChecks'),
             rickrollCount: document.getElementById('rickrollCount'),
             patternCount: document.getElementById('patternCount'),
-            editorSection: document.getElementById('editorSection'),
-            databaseEditor: document.getElementById('databaseEditor'),
-            notification: document.getElementById('notification'),
+            historyList: document.getElementById('historyList'),
+            emptyHistory: document.getElementById('emptyHistory'),
             modeDesc: document.getElementById('modeDesc'),
             textSection: document.getElementById('textSection'),
             textInput: document.getElementById('textInput'),
             checkTextBtn: document.getElementById('checkTextBtn'),
             clearTextBtn: document.getElementById('clearTextBtn'),
             textResultBox: document.getElementById('textResultBox'),
-            textResultEmoji: document.getElementById('textResultEmoji'),
-            textResultText: document.getElementById('textResultText'),
-            textResultDetail: document.getElementById('textResultDetail'),
-            youtubeToggle: document.getElementById('youtubeToggle'),
-            youtubeDesc: document.getElementById('youtubeDesc'),
             mainCard: document.getElementById('mainCard'),
-            mainCardTitle: document.getElementById('mainCardTitle'),
-            youtubeIndicator: document.getElementById('youtubeIndicator')
+            notification: document.getElementById('notification')
         };
 
         // ============================================
-        // MODUS-HÅNDTERING
+        // MODE SELECTOR - ALLE TRE!
         // ============================================
-        
         function setMode(mode) {
             currentMode = mode;
             
+            // Oppdater knapper
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.mode === mode);
             });
             
-            if (mode === 'advanced') {
-                elements.textSection.style.display = 'block';
-                elements.modeDesc.textContent = 'Avansert: Sjekker både lenker og tekst. Fang skjulte Rickrolls!';
-            } else {
-                elements.textSection.style.display = 'none';
-                elements.textResultBox.style.display = 'none';
+            // Oppdater beskrivelse og UI
+            if (mode === 'standard') {
                 elements.modeDesc.textContent = 'Standard: Sjekker kun lenker. Raskt og enkelt.';
-            }
-            
-            localStorage.setItem('rickrollMode', mode);
-            showNotification(`Modus endret til: ${mode === 'advanced' ? 'Avansert' : 'Standard'}`, 'primary');
-        }
-
-        function loadMode() {
-            const savedMode = localStorage.getItem('rickrollMode') || 'standard';
-            setMode(savedMode);
-            return savedMode;
-        }
-
-        // ============================================
-        // YOUTUBE MODE FUNKSJONER
-        // ============================================
-        
-        function toggleYoutubeMode() {
-            youtubeMode = !youtubeMode;
-            
-            if (youtubeMode) {
-                elements.youtubeToggle.textContent = '⏸️ YouTube Mode PÅ';
-                elements.youtubeToggle.classList.add('active');
-                elements.youtubeDesc.textContent = 'YouTube Mode er PÅ! Hovedboksen scanner nå YouTube-videoer.';
-                elements.mainCard.classList.add('youtube-active');
-                elements.mainCardTitle.innerHTML = '🎥 YouTube Scanner';
-                elements.youtubeIndicator.style.display = 'inline-block';
-                elements.urlInput.placeholder = 'Lim inn YouTube URL eller video-ID...';
-                showNotification('🎥 YouTube Mode AKTIVERT!', 'success');
-            } else {
-                elements.youtubeToggle.textContent = '▶️ YouTube Mode AV';
-                elements.youtubeToggle.classList.remove('active');
-                elements.youtubeDesc.textContent = 'YouTube Mode er AV. Skru på for å gjøre hovedboksen om til YouTube-scanner.';
+                elements.textSection.style.display = 'none';
                 elements.mainCard.classList.remove('youtube-active');
-                elements.mainCardTitle.innerHTML = '🔍 Lenkesjekk';
-                elements.youtubeIndicator.style.display = 'none';
-                elements.urlInput.placeholder = 'Lim inn mistenkelig lenke her...';
-                showNotification('YouTube Mode deaktivert', 'warning');
+                elements.urlInput.placeholder = 'Lim inn mistenkelig lenke...';
             }
-            
-            localStorage.setItem('youtubeMode', youtubeMode ? 'on' : 'off');
-        }
-
-        function loadYoutubeMode() {
-            const saved = localStorage.getItem('youtubeMode');
-            youtubeMode = saved === 'on';
-            
-            if (youtubeMode) {
-                elements.youtubeToggle.textContent = '⏸️ YouTube Mode PÅ';
-                elements.youtubeToggle.classList.add('active');
-                elements.youtubeDesc.textContent = 'YouTube Mode er PÅ! Hovedboksen scanner nå YouTube-videoer.';
-                elements.mainCard.classList.add('youtube-active');
-                elements.mainCardTitle.innerHTML = '🎥 YouTube Scanner';
-                elements.youtubeIndicator.style.display = 'inline-block';
-                elements.urlInput.placeholder = 'Lim inn YouTube URL eller video-ID...';
-            } else {
-                elements.youtubeToggle.textContent = '▶️ YouTube Mode AV';
-                elements.youtubeToggle.classList.remove('active');
-                elements.youtubeDesc.textContent = 'YouTube Mode er AV. Skru på for å gjøre hovedboksen om til YouTube-scanner.';
+            else if (mode === 'advanced') {
+                elements.modeDesc.textContent = 'Avansert: Sjekker både lenker og tekst. Fang skjulte Rickrolls!';
+                elements.textSection.style.display = 'block';
                 elements.mainCard.classList.remove('youtube-active');
-                elements.mainCardTitle.innerHTML = '🔍 Lenkesjekk';
-                elements.youtubeIndicator.style.display = 'none';
-                elements.urlInput.placeholder = 'Lim inn mistenkelig lenke her...';
+                elements.urlInput.placeholder = 'Lim inn lenke eller tekst...';
+            }
+            else if (mode === 'youtube') {
+                elements.modeDesc.textContent = 'YouTube Mode: Lim inn YouTube-lenke for å scanne videoer!';
+                elements.textSection.style.display = 'none';
+                elements.mainCard.classList.add('youtube-active');
+                elements.urlInput.placeholder = 'Lim inn YouTube URL...';
             }
         }
 
         // ============================================
-        // YOUTUBE SCANNING - FORBEDRET!
+        // YOUTUBE SCANNING
         // ============================================
-        
         function scanYouTubeVideo(url) {
-            showNotification('🎥 Scanner YouTube-video...', 'primary');
+            showNotification('🎥 Scanner YouTube...', 'primary');
             
             // Hent video-ID
             let videoId = url;
-            if (url.includes('youtube.com/watch?v=')) {
+            if (url.includes('v=')) {
                 videoId = url.split('v=')[1].split('&')[0];
             } else if (url.includes('youtu.be/')) {
                 videoId = url.split('youtu.be/')[1].split('?')[0];
             }
             
-            // 1. SJEKK VIDEO-ID MOT DATABASEN
-            const idResult = checkForRickroll('youtube.com/watch?v=' + videoId);
+            // Sjekk video-ID
+            if (videoId === 'dQw4w9WgXcQ') {
+                displayResult(url, {
+                    isRickroll: true,
+                    type: '🎥 YOUTUBE RICKROLL',
+                    matched: 'Klassisk Rickroll video-ID!',
+                    confidence: 100
+                });
+                return;
+            }
             
-            // 2. SCAN TITTEL OG KANAL (hvis vi er på YouTube)
-            setTimeout(() => {
-                let allFindings = [];
-                let details = [];
-                
-                // Video-ID sjekk
-                if (idResult.isRickroll) {
-                    allFindings.push({
-                        type: 'VIDEO_ID',
-                        message: 'Video-ID matcher Rickroll',
-                        confidence: 100
-                    });
-                    details.push('🎬 Video-ID er Rickroll!');
-                }
-                
-                // TITTEL
-                const titleElement = document.querySelector('h1 yt-formatted-string');
-                if (titleElement) {
-                    const title = titleElement.textContent;
-                    if (title.toLowerCase().includes('rick astley') || 
-                        title.toLowerCase().includes('never gonna') ||
-                        title.toLowerCase().includes('rickroll')) {
-                        allFindings.push({
-                            type: 'TITLE',
-                            message: 'Mistenkelig tittel',
-                            confidence: 80
-                        });
-                        details.push('📺 Tittel inneholder Rickroll-ord');
+            // Sjekk om vi er på YouTube-siden
+            if (window.location.hostname.includes('youtube.com')) {
+                setTimeout(() => {
+                    let details = [];
+                    const title = document.querySelector('h1 yt-formatted-string');
+                    if (title && title.textContent.toLowerCase().includes('rick astley')) {
+                        details.push('🎬 Tittel: Rick Astley');
                     }
-                }
-                
-                // KANAL
-                const channelElement = document.querySelector('#owner yt-formatted-string a');
-                if (channelElement) {
-                    const channel = channelElement.textContent;
-                    if (channel.toLowerCase().includes('rick astley')) {
-                        allFindings.push({
-                            type: 'CHANNEL',
-                            message: 'Kanal: Rick Astley',
-                            confidence: 95
-                        });
-                        details.push('📡 Kanal er Rick Astley!');
-                    }
-                }
-                
-                // VIS RESULTAT
-                if (allFindings.length > 0) {
-                    let detailHtml = '<div style="text-align: left;">';
-                    details.forEach(d => detailHtml += '• ' + d + '<br>');
-                    detailHtml += '</div>';
                     
-                    displayResult(url, {
-                        isRickroll: true,
-                        type: 'YOUTUBE_FOUND',
-                        matched: detailHtml,
-                        confidence: 95
-                    });
-                } else {
-                    displayResult(url, {
-                        isRickroll: false,
-                        type: 'SAFE',
-                        matched: 'Ingen Rickroll funnet i videoen',
-                        confidence: 0
-                    });
-                }
-            }, 2000);
+                    if (details.length > 0) {
+                        displayResult(url, {
+                            isRickroll: true,
+                            type: 'YOUTUBE FUNN',
+                            matched: details.join('<br>'),
+                            confidence: 85
+                        });
+                    } else {
+                        displayResult(url, {
+                            isRickroll: false,
+                            type: 'YOUTUBE SCAN',
+                            matched: 'Ingen Rickroll funnet på siden',
+                            confidence: 100
+                        });
+                    }
+                }, 2000);
+            } else {
+                displayResult(url, {
+                    isRickroll: false,
+                    type: 'VIDEO-ID SJEKK',
+                    matched: 'Video-ID er ikke i databasen',
+                    confidence: 100
+                });
+            }
         }
 
         // ============================================
-        // TEKSTANALYSE
+        // KJERNEFUNKSJONER
         // ============================================
-        
+        function normalizeUrl(url) {
+            return url.toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').split('?')[0];
+        }
+
+        function checkForRickroll(url) {
+            const normalized = normalizeUrl(url);
+            
+            if (normalized.includes('dqw4w9wgxcq')) {
+                return { isRickroll: true, matched: 'Rickroll video-ID', confidence: 100 };
+            }
+            
+            for (const pattern of rickrollDatabase) {
+                if (normalized.includes(pattern.toLowerCase())) {
+                    return { isRickroll: true, matched: pattern, confidence: 95 };
+                }
+            }
+            
+            return { isRickroll: false };
+        }
+
         function analyzeText(text) {
             const results = [];
             const lowerText = text.toLowerCase();
             
-            if (lowerText.includes('dqw4w9wgxcq')) {
-                results.push({
-                    type: 'VIDEO_ID',
-                    message: 'Rickroll video-ID funnet',
-                    confidence: 95,
-                    severity: 'danger'
-                });
-            }
-            
-            TEXT_KEYWORDS.forEach(keyword => {
-                if (lowerText.includes(keyword.word)) {
-                    results.push({
-                        type: 'KEYWORD',
-                        message: `Nøkkelord: "${keyword.word}"`,
-                        confidence: keyword.confidence,
-                        severity: 'warning'
-                    });
+            TEXT_KEYWORDS.forEach(k => {
+                if (lowerText.includes(k.word)) {
+                    results.push({ type: 'KEYWORD', message: k.word, confidence: k.confidence });
                 }
             });
             
-            const urlRegex = /(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/gi;
-            const urls = text.match(urlRegex) || [];
-            
+            const urls = text.match(/(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/gi) || [];
             urls.forEach(url => {
                 const result = checkForRickroll(url);
                 if (result.isRickroll) {
-                    results.push({
-                        type: 'HIDDEN_URL',
-                        message: `Skjult Rickroll-lenke`,
-                        confidence: result.confidence,
-                        url: url,
-                        severity: 'danger'
-                    });
+                    results.push({ type: 'HIDDEN_URL', message: 'Skjult Rickroll-lenke', confidence: 95 });
                 }
             });
             
             return results;
         }
 
-        function displayTextResults(results) {
-            if (results.length === 0) {
-                elements.textResultEmoji.textContent = '✅';
-                elements.textResultText.textContent = 'Ingen Rickrolls funnet i teksten';
-                elements.textResultDetail.textContent = 'Teksten ser trygg ut!';
-                elements.textResultBox.className = 'result-box safe';
-            } else {
-                results.sort((a, b) => {
-                    const severityOrder = { danger: 3, warning: 2, safe: 1 };
-                    return severityOrder[b.severity] - severityOrder[a.severity];
-                });
-                
-                const highestSeverity = results[0].severity;
-                
-                if (highestSeverity === 'danger') {
-                    elements.textResultEmoji.textContent = '🚨';
-                    elements.textResultText.textContent = `${results.length} Rickroll-indikatorer funnet!`;
-                    elements.textResultBox.className = 'result-box danger';
-                } else {
-                    elements.textResultEmoji.textContent = '⚠️';
-                    elements.textResultText.textContent = `${results.length} mistenkelige elementer funnet`;
-                    elements.textResultBox.className = 'result-box text-warning';
-                }
-                
-                let detailHtml = '<div style="text-align: left; font-size: 0.9rem;">';
-                results.forEach(result => {
-                    const severityIcon = result.severity === 'danger' ? '🔴' : '🟡';
-                    detailHtml += `${severityIcon} <strong>${result.type}:</strong> ${result.message} (${result.confidence}%)<br>`;
-                });
-                detailHtml += '</div>';
-                elements.textResultDetail.innerHTML = detailHtml;
-            }
-            elements.textResultBox.style.display = 'block';
-        }
-
-        // ============================================
-        // KJERNEFUNKSJONER - FIKSET!
-        // ============================================
-        
-        function normalizeUrl(url) {
-            if (!url) return '';
-            let cleaned = url.toLowerCase().trim();
-            cleaned = cleaned.replace(/^https?:\/\//, '');
-            const subdomains = ['www.', 'm.', 'mobile.', 'en.', 'de.', 'fr.', 'video.', 'watch.'];
-            for (const sub of subdomains) {
-                if (cleaned.startsWith(sub)) {
-                    cleaned = cleaned.substring(sub.length);
-                    break;
-                }
-            }
-            cleaned = cleaned.replace(/\/$/, '').split('?')[0].split('#')[0];
-            return cleaned;
-        }
-
-        function checkForRickroll(url) {
-            const normalized = normalizeUrl(url);
-            
-            // Video-ID
-            if (normalized.includes('dqw4w9wgxcq')) {
-                return {
-                    isRickroll: true,
-                    type: 'CLASSIC_RICKROLL',
-                    matched: 'Rickroll video-ID',
-                    confidence: 100
-                };
-            }
-
-            // Database
-            for (const pattern of rickrollDatabase) {
-                if (normalized.includes(pattern.toLowerCase())) {
-                    return {
-                        isRickroll: true,
-                        type: 'KNOWN_PATTERN',
-                        matched: pattern,
-                        confidence: 95
-                    };
-                }
-            }
-
-            // Keywords
-            let foundKeywords = [];
-            for (const keyword of suspiciousKeywords) {
-                if (normalized.includes(keyword)) {
-                    foundKeywords.push(keyword);
-                }
-            }
-            
-            if (foundKeywords.length > 2) {
-                return {
-                    isRickroll: true,
-                    type: 'MULTIPLE_KEYWORDS',
-                    matched: foundKeywords.join(', '),
-                    confidence: 85
-                };
-            } else if (foundKeywords.length > 0) {
-                return {
-                    isRickroll: 'SUSPICIOUS',
-                    type: 'KEYWORD_MATCH',
-                    matched: foundKeywords.join(', '),
-                    confidence: Math.min(70, foundKeywords.length * 25)
-                };
-            }
-
-            return {
-                isRickroll: false,
-                type: 'SAFE',
-                matched: null,
-                confidence: 0
-            };
-        }
-
-        // ============================================
-        // DATABASE FUNKSJONER
-        // ============================================
-        
-        function saveAllData() {
-            try {
-                const data = {
-                    database: rickrollDatabase,
-                    keywords: suspiciousKeywords,
-                    history: checkHistory.slice(0, 20),
-                    stats: {
-                        totalChecks: totalChecks,
-                        rickrollsFound: rickrollsFound,
-                        lastUpdated: new Date().toISOString()
-                    },
-                    version: "5.2"
-                };
-                localStorage.setItem('rickrollShieldULTRA_data', JSON.stringify(data));
-            } catch (e) {
-                console.error('Kunne ikke lagre data:', e);
-            }
-        }
-
-        function loadAllData() {
-            try {
-                const saved = localStorage.getItem('rickrollShieldULTRA_data');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    if (data.database && Array.isArray(data.database)) {
-                        rickrollDatabase = data.database;
-                    } else {
-                        rickrollDatabase = [...DEFAULT_DATABASE];
-                    }
-                    if (data.keywords && Array.isArray(data.keywords)) {
-                        suspiciousKeywords = data.keywords;
-                    } else {
-                        suspiciousKeywords = [...DEFAULT_KEYWORDS];
-                    }
-                    if (data.history && Array.isArray(data.history)) {
-                        checkHistory = data.history;
-                    }
-                    if (data.stats) {
-                        totalChecks = data.stats.totalChecks || 0;
-                        rickrollsFound = data.stats.rickrollsFound || 0;
-                    }
-                    updateUI();
-                    return true;
-                }
-            } catch (e) {
-                console.error('Kunne ikke laste data:', e);
-            }
-            rickrollDatabase = [...DEFAULT_DATABASE];
-            suspiciousKeywords = [...DEFAULT_KEYWORDS];
-            updateUI();
-            return false;
-        }
-
-        function saveDatabase() {
-            const text = elements.databaseEditor.value.trim();
-            const lines = text.split('\n')
-                .map(line => line.trim())
-                .filter(line => line.length > 0 && !line.startsWith('//'));
-            
-            if (lines.length === 0) {
-                showNotification('Database kan ikke være tom!', 'danger');
-                return;
-            }
-            
-            const allPatterns = [...new Set([...DEFAULT_DATABASE, ...lines])];
-            rickrollDatabase = allPatterns;
-            updateUI();
-            saveAllData();
-            showNotification(`✅ Database lagret med ${rickrollDatabase.length} mønstre!`, 'safe');
-        }
-
-        function resetToDefault() {
-            if (confirm('Tilbakestille til standard database?')) {
-                rickrollDatabase = [...DEFAULT_DATABASE];
-                suspiciousKeywords = [...DEFAULT_KEYWORDS];
-                updateUI();
-                loadDatabase();
-                saveAllData();
-                showNotification('Standard database gjenopprettet!', 'warning');
-            }
-        }
-
-        function loadDatabase() {
-            elements.databaseEditor.value = rickrollDatabase.join('\n');
-        }
-
-        function addExample() {
-            const examples = [
-                'discord.gg/rickroll',
-                'twitch.tv/rickroll',
-                'reddit.com/r/rickroll',
-                'github.com/rickroll',
-                'netflix.com/rickroll',
-                'spotify.com/track/rickroll',
-                'steamcommunity.com/rickroll'
-            ];
-            const randomExample = examples[Math.floor(Math.random() * examples.length)];
-            const current = elements.databaseEditor.value;
-            elements.databaseEditor.value = current + (current ? '\n' : '') + randomExample;
-            showNotification('Eksempel lagt til: ' + randomExample, 'primary');
-        }
-
-        function exportDatabase() {
-            const data = {
-                database: rickrollDatabase,
-                keywords: suspiciousKeywords,
-                exported: new Date().toISOString(),
-                count: rickrollDatabase.length
-            };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `rickroll-database-${new Date().toISOString().slice(0,10)}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showNotification(`Database eksportert (${rickrollDatabase.length} mønstre)`, 'safe');
-        }
-
-        function importDatabase() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    try {
-                        const data = JSON.parse(event.target.result);
-                        if (data.database && Array.isArray(data.database)) {
-                            rickrollDatabase = [...new Set([...rickrollDatabase, ...data.database])];
-                            if (data.keywords) {
-                                suspiciousKeywords = [...new Set([...suspiciousKeywords, ...data.keywords])];
-                            }
-                            updateUI();
-                            loadDatabase();
-                            saveAllData();
-                            showNotification(`Importert ${data.database.length} mønstre!`, 'safe');
-                        }
-                    } catch (err) {
-                        showNotification('Feil ved import: ' + err.message, 'danger');
-                    }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
-
-        function updateUI() {
-            elements.totalChecks.textContent = totalChecks;
-            elements.rickrollCount.textContent = rickrollsFound;
-            elements.patternCount.textContent = rickrollDatabase.length;
-            updateHistoryDisplay();
-        }
-
-        function displayResult(url, result) {
-            elements.resultBox.style.display = 'block';
-            elements.emptyHistory.style.display = 'none';
-            
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' });
-            
-            let emoji = '🤔';
-            let text = 'Ukjent';
-            let cssClass = 'warning';
-            let detail = result.matched || '';
-
-            if (result.isRickroll === true) {
-                emoji = '🚨';
-                text = 'RICKROLL FUNNET!';
-                cssClass = 'danger';
-                rickrollsFound++;
-            } else if (result.isRickroll === 'SUSPICIOUS') {
-                emoji = '⚠️';
-                text = 'MISTENKELIG';
-                cssClass = 'warning';
-            } else {
-                emoji = '✅';
-                text = 'SER TRYGG UT';
-                cssClass = 'safe';
-                detail = 'Ingen Rickroll funnet';
-            }
-
-            elements.resultEmoji.textContent = emoji;
-            elements.resultText.textContent = text;
-            elements.resultDetail.innerHTML = detail;
-            elements.resultBox.className = `result-box ${cssClass}`;
-            
-            totalChecks++;
-            updateUI();
-            addToHistory(url, result, timeString, emoji);
-            saveAllData();
-        }
-
-        function addToHistory(url, result, time, emoji) {
-            const historyItem = {
-                id: Date.now(),
-                url: url.length > 60 ? url.substring(0, 57) + '...' : url,
-                fullUrl: url,
-                result: result,
-                time: time,
-                emoji: emoji,
-                date: new Date().toLocaleDateString('no-NO')
-            };
-            checkHistory.unshift(historyItem);
-            if (checkHistory.length > 15) {
-                checkHistory = checkHistory.slice(0, 15);
-            }
-            updateHistoryDisplay();
-        }
-
-        function updateHistoryDisplay() {
-            elements.historyList.innerHTML = '';
-            if (checkHistory.length === 0) {
-                elements.emptyHistory.style.display = 'block';
-                return;
-            }
-            elements.emptyHistory.style.display = 'none';
-            checkHistory.forEach(item => {
-                const div = document.createElement('div');
-                let bgClass = 'history-warning';
-                if (item.result.isRickroll === true) bgClass = 'history-danger';
-                else if (item.result.isRickroll === false) bgClass = 'history-safe';
-                else if (item.result.type && item.result.type.includes('YOUTUBE')) bgClass = 'history-youtube';
-                
-                div.className = `history-item ${bgClass}`;
-                div.innerHTML = `
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="font-size: 1.2rem;">${item.emoji}</span>
-                        <div><strong>${item.time}</strong> ${item.date}</div>
-                    </div>
-                    <div style="font-size: 0.85rem; word-break: break-all;">${item.url}</div>
-                `;
-                div.addEventListener('click', () => {
-                    alert(`Full URL:\n${item.fullUrl}\n\nType: ${item.result.type || 'Ukjent'}`);
-                });
-                elements.historyList.appendChild(div);
-            });
-        }
-
-        function showNotification(message, type = 'safe') {
-            elements.notification.textContent = message;
-            elements.notification.style.background = type === 'safe' ? 'var(--safe)' : 
-                                                   type === 'warning' ? 'var(--warning)' : 
-                                                   type === 'danger' ? 'var(--danger)' : 
-                                                   type === 'success' ? 'var(--safe)' : 'var(--primary)';
-            elements.notification.style.display = 'block';
-            setTimeout(() => {
-                elements.notification.style.display = 'none';
-            }, 3000);
-        }
-
-        function toggleEditor() {
-            isEditorOpen = !isEditorOpen;
-            elements.editorSection.style.display = isEditorOpen ? 'block' : 'none';
-            if (isEditorOpen) {
-                loadDatabase();
-                showNotification('Redigeringsmodus aktivert', 'editor');
-            }
-        }
-
-        function testRandomRickroll() {
-            const testUrls = [
-                'https://youtu.be/dQw4w9WgXcQ',
-                'https://bit.ly/3t0x1mz',
-                'https://rickroll.it'
-            ];
-            const randomUrl = testUrls[Math.floor(Math.random() * testUrls.length)];
-            elements.urlInput.value = randomUrl;
-            performCheck();
-        }
-
-        // ============================================
-        // HOVEDFUNKSJON - FIKSET!
-        // ============================================
-        
         function performCheck() {
             const input = elements.urlInput.value.trim();
-            
             if (!input) {
-                showNotification('Skriv inn noe først!', 'warning');
+                showNotification('Skriv inn noe!', 'warning');
                 return;
             }
             
-            // HVIS YOUTUBE MODE ER PÅ
-            if (youtubeMode) {
-                // Sjekk om det er en YouTube-lenke
+            // YOUTUBE MODE
+            if (currentMode === 'youtube') {
                 if (input.includes('youtube.com') || input.includes('youtu.be')) {
                     scanYouTubeVideo(input);
                 } else {
-                    // Hvis det ikke er YouTube-lenke, sjekk som vanlig
-                    const result = checkForRickroll(input);
-                    displayResult(input, result);
+                    showNotification('❌ YouTube Mode krever YouTube-lenke!', 'warning');
                 }
                 return;
             }
             
-            // STANDARD MODE - sjekk som vanlig URL
-            const result = checkForRickroll(input);
-            displayResult(input, result);
-        }
-
-        function clearHistoryUI() {
-            if (checkHistory.length === 0) return;
-            if (confirm('Tømme historikk?')) {
-                checkHistory = [];
-                updateHistoryDisplay();
-                saveAllData();
-                showNotification('Historikk tømt!', 'danger');
+            // STANDARD MODE
+            if (currentMode === 'standard') {
+                const result = checkForRickroll(input);
+                displayResult(input, result);
+            }
+            
+            // AVANSERT MODE (beholder tekstanalyse)
+            if (currentMode === 'advanced') {
+                const result = checkForRickroll(input);
+                displayResult(input, result);
             }
         }
 
@@ -1364,56 +535,161 @@ tinyurl.com/rickroll
                 showNotification('Skriv inn tekst!', 'warning');
                 return;
             }
+            
             const results = analyzeText(text);
-            displayTextResults(results);
+            
+            if (results.length === 0) {
+                elements.textResultBox.style.display = 'block';
+                elements.textResultBox.className = 'result-box safe';
+                elements.textResultBox.innerHTML = '✅ Ingen Rickrolls funnet i teksten';
+            } else {
+                elements.textResultBox.style.display = 'block';
+                elements.textResultBox.className = 'result-box warning';
+                let html = '⚠️ Mistenkelige funn:<br>';
+                results.forEach(r => html += `• ${r.type}: ${r.message} (${r.confidence}%)<br>`);
+                elements.textResultBox.innerHTML = html;
+            }
         }
 
-        function clearText() {
-            elements.textInput.value = '';
-            elements.textResultBox.style.display = 'none';
-            showNotification('Tekstfelt tømt', 'primary');
+        function displayResult(input, result) {
+            elements.resultBox.style.display = 'block';
+            
+            let emoji = '🤔', text = 'Ukjent', cssClass = 'warning', detail = '';
+            
+            if (result.isRickroll === true) {
+                emoji = '🚨';
+                text = 'RICKROLL FUNNET!';
+                cssClass = 'danger';
+                detail = result.matched + ' | ' + result.confidence + '%';
+                rickrollsFound++;
+            } else {
+                emoji = '✅';
+                text = 'SER TRYGG UT';
+                cssClass = 'safe';
+                detail = result.matched || 'Ingen Rickroll funnet';
+            }
+            
+            elements.resultEmoji.textContent = emoji;
+            elements.resultText.textContent = text;
+            elements.resultDetail.innerHTML = detail;
+            elements.resultBox.className = `result-box ${cssClass}`;
+            
+            totalChecks++;
+            updateUI();
+            addToHistory(input, result, new Date().toLocaleTimeString(), emoji);
+        }
+
+        function addToHistory(url, result, time, emoji) {
+            const bgClass = result.isRickroll ? 'history-danger' : 
+                           currentMode === 'youtube' ? 'history-youtube' : 'history-safe';
+            
+            const item = { id: Date.now(), url: url.substring(0, 50), time, emoji, bgClass };
+            checkHistory.unshift(item);
+            if (checkHistory.length > 10) checkHistory.pop();
+            updateHistory();
+        }
+
+        function updateHistory() {
+            elements.historyList.innerHTML = '';
+            if (checkHistory.length === 0) {
+                elements.emptyHistory.style.display = 'block';
+                return;
+            }
+            elements.emptyHistory.style.display = 'none';
+            checkHistory.forEach(item => {
+                const div = document.createElement('div');
+                div.className = `history-item ${item.bgClass}`;
+                div.innerHTML = `<span>${item.emoji} ${item.time}</span> ${item.url}`;
+                elements.historyList.appendChild(div);
+            });
+        }
+
+        function updateUI() {
+            elements.totalChecks.textContent = totalChecks;
+            elements.rickrollCount.textContent = rickrollsFound;
+            elements.patternCount.textContent = rickrollDatabase.length;
+        }
+
+        function showNotification(msg, type) {
+            elements.notification.textContent = msg;
+            elements.notification.style.background = type === 'danger' ? '#ef4444' : 
+                                                     type === 'warning' ? '#f59e0b' : 
+                                                     type === 'primary' ? '#3b82f6' : '#10b981';
+            elements.notification.style.display = 'block';
+            setTimeout(() => elements.notification.style.display = 'none', 3000);
+        }
+
+        function testRandomRickroll() {
+            const testUrls = [
+                'https://youtu.be/dQw4w9WgXcQ',
+                'https://bit.ly/3t0x1mz',
+                'https://rickroll.it'
+            ];
+            elements.urlInput.value = testUrls[Math.floor(Math.random() * testUrls.length)];
+            performCheck();
+        }
+
+        function clearHistory() {
+            if (confirm('Tømme historikk?')) {
+                checkHistory = [];
+                updateHistory();
+                showNotification('Historikk tømt!', 'warning');
+            }
+        }
+
+        function toggleEditor() {
+            const editor = document.getElementById('editorSection');
+            editor.style.display = editor.style.display === 'none' ? 'block' : 'none';
+            if (editor.style.display === 'block') {
+                document.getElementById('databaseEditor').value = rickrollDatabase.join('\n');
+            }
+        }
+
+        function saveDatabase() {
+            const text = document.getElementById('databaseEditor').value.trim();
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length > 0) {
+                rickrollDatabase = [...new Set(lines)];
+                updateUI();
+                showNotification(`Database lagret (${rickrollDatabase.length} mønstre)!`, 'success');
+            }
+        }
+
+        function resetToDefault() {
+            if (confirm('Tilbakestille til standard database?')) {
+                rickrollDatabase = [...DEFAULT_DATABASE];
+                showNotification('Standard database gjenopprettet!', 'warning');
+                updateUI();
+            }
         }
 
         // ============================================
         // INIT
         // ============================================
-        
         function init() {
-            loadAllData();
-            loadMode();
-            loadYoutubeMode();
-            
-            // Mode toggle
+            // Mode selector
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.addEventListener('click', () => setMode(btn.dataset.mode));
             });
             
-            // YouTube toggle
-            elements.youtubeToggle.addEventListener('click', toggleYoutubeMode);
-            
-            // Hovedknapper
+            // Buttons
             elements.checkBtn.addEventListener('click', performCheck);
             elements.testBtn.addEventListener('click', testRandomRickroll);
-            elements.clearBtn.addEventListener('click', clearHistoryUI);
-            
-            // Tekstanalyse
+            elements.clearBtn.addEventListener('click', clearHistory);
             elements.checkTextBtn.addEventListener('click', performTextCheck);
-            elements.clearTextBtn.addEventListener('click', clearText);
-            
-            // Enter-trykk
-            elements.urlInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') performCheck();
+            elements.clearTextBtn.addEventListener('click', () => {
+                elements.textInput.value = '';
+                elements.textResultBox.style.display = 'none';
             });
             
-            elements.textInput.addEventListener('keypress', (e) => {
+            // Enter
+            elements.urlInput.addEventListener('keypress', e => e.key === 'Enter' && performCheck());
+            elements.textInput.addEventListener('keypress', e => {
                 if (e.ctrlKey && e.key === 'Enter') performTextCheck();
             });
             
-            setInterval(saveAllData, 30000);
-            
-            setTimeout(() => {
-                showNotification(`Rickroll Shield klar! ${rickrollDatabase.length} mønstre`, 'safe');
-            }, 1000);
+            updateUI();
+            showNotification('Rickroll Shield klar!', 'success');
         }
 
         window.addEventListener('DOMContentLoaded', init);
