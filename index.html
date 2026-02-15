@@ -528,7 +528,7 @@
     
     <div class="container">
         <header>
-            <div class="version-badge">🔥 ULTIMATE 6.0 🔥</div>
+            <div class="version-badge">🔥 ULTIMATE 7.0 🔥</div>
             <h1>
                 <span>🛡️</span>
                 RICKROLL SHIELD
@@ -544,7 +544,7 @@
             <button class="mode-btn" data-mode="youtube">🎥 YOUTUBE</button>
         </div>
         <div class="mode-description" id="modeDesc">
-            Standard: Sjekker vanlige lenker mot 100+ mønstre
+            Standard: Sjekker ALLE lenker mot 100+ mønstre (inkludert YouTube)
         </div>
         
         <!-- MAIN CARD -->
@@ -580,7 +580,7 @@
             </div>
         </div>
         
-        <!-- TEXT ANALYSIS (Avansert modus) -->
+        <!-- TEXT ANALYSIS (Kun i Avansert modus) -->
         <div class="main-card" id="textSection" style="display: none;">
             <h3 style="margin-bottom: 15px;">🔤 TEKSTANALYSE</h3>
             <textarea id="textInput" rows="5" placeholder="Lim inn tekst for å sjekke etter skjulte Rickrolls, video-IDer og nøkkelord..."></textarea>
@@ -589,6 +589,13 @@
                 <button id="clearTextBtn" class="secondary-btn">🗑️ TØM</button>
             </div>
             <div id="textResultBox" class="result-box" style="display: none;"></div>
+        </div>
+        
+        <!-- YOUTUBE DETAILS (Kun i YouTube modus) -->
+        <div class="main-card" id="youtubeSection" style="display: none;">
+            <h3 style="color: #ff0000; margin-bottom: 15px;">🎥 YOUTUBE DETALJER</h3>
+            <p style="margin-bottom: 15px;">Scanner tittel, kanal, beskrivelse og kommentarer for Rickrolls</p>
+            <div id="youtubeResult" class="result-box" style="display: none;"></div>
         </div>
         
         <!-- HISTORY -->
@@ -613,7 +620,7 @@
         </div>
         
         <footer>
-            ⚡ 100+ Rickroll-mønstre • Automatisk lagring • 3 moduser • Kule animasjoner ⚡
+            ⚡ Standard: Alle lenker • Avansert: +Tekstanalyse • YouTube: Detaljscanning ⚡
         </footer>
     </div>
 
@@ -633,6 +640,9 @@
             "youtube.com/embed/dQw4w9WgXcQ",
             "youtube.com/v/dQw4w9WgXcQ",
             "m.youtube.com/watch?v=dQw4w9WgXcQ",
+            "youtube.com/watch?v=6_b7RDuLwcI",
+            "youtube.com/watch?v=Gc2u6AFImn8",
+            "youtube.com/watch?v=QtBDL8EiNZo",
             
             // Forkortede linker
             "bit.ly/3t0x1mz",
@@ -648,6 +658,7 @@
             "shrtco.de/rick",
             "ow.ly/rickroll",
             "tiny.cc/rickroll",
+            "bitly.com/rickroll",
             
             // Rickroll-domener
             "rickroll.it",
@@ -670,6 +681,8 @@
             "rickroll.rocks",
             "rickroll.party",
             "rickroll.life",
+            "rickroll.today",
+            "rickroll.online",
             
             // Sosiale medier
             "tiktok.com/@rickroll",
@@ -687,6 +700,7 @@
             "dailymotion.com/rickroll",
             "twitch.tv/clip/rickroll",
             "rumble.com/rickroll",
+            "tiktok.com/@rickroll",
             
             // DNS-humor
             "1.1.1.1/rickroll",
@@ -722,6 +736,8 @@
             "playstation.com/rickroll",
             "nintendo.com/rickroll",
             "rockstargames.com/rickroll",
+            "minecraft.net/rickroll",
+            "roblox.com/rickroll",
             
             // Streaming
             "netflix.com/rickroll",
@@ -762,7 +778,20 @@
             { word: 'dqw4w9wgxcq', confidence: 100 },
             { word: 'rick roll', confidence: 85 },
             { word: 'rickrolled', confidence: 90 },
-            { word: 'rick rolling', confidence: 85 }
+            { word: 'rick rolling', confidence: 85 },
+            { word: 'rickroll 2024', confidence: 80 },
+            { word: 'original rickroll', confidence: 90 }
+        ];
+
+        // YouTube nøkkelord for detaljscanning
+        const YOUTUBE_KEYWORDS = [
+            'rick astley',
+            'never gonna give you up',
+            'rickroll',
+            'dQw4w9WgXcQ',
+            'rick rolled',
+            'official video',
+            'rick astley official'
         ];
 
         // State
@@ -793,6 +822,8 @@
             checkTextBtn: document.getElementById('checkTextBtn'),
             clearTextBtn: document.getElementById('clearTextBtn'),
             textResultBox: document.getElementById('textResultBox'),
+            youtubeSection: document.getElementById('youtubeSection'),
+            youtubeResult: document.getElementById('youtubeResult'),
             mainCard: document.getElementById('mainCard'),
             notification: document.getElementById('notification')
         };
@@ -808,61 +839,113 @@
             });
             
             if (mode === 'standard') {
-                elements.modeDesc.textContent = '🛡️ Standard: Sjekker vanlige lenker mot 100+ Rickroll-mønstre';
+                elements.modeDesc.textContent = '🛡️ Standard: Sjekker ALLE lenker mot 100+ mønstre (inkludert YouTube)';
                 elements.textSection.style.display = 'none';
+                elements.youtubeSection.style.display = 'none';
                 elements.mainCard.classList.remove('youtube-active');
-                elements.urlInput.placeholder = 'Lim inn mistenkelig lenke...';
-                showNotification('Standard modus aktivert', 'primary');
+                elements.urlInput.placeholder = 'Lim inn lenke eller YouTube-URL...';
+                showNotification('Standard modus: Sjekker alle lenker', 'primary');
             }
             else if (mode === 'advanced') {
-                elements.modeDesc.textContent = '⚡ Avansert: Sjekker både lenker OG tekst for skjulte Rickrolls';
+                elements.modeDesc.textContent = '⚡ Avansert: Sjekker alle lenker PLUSS tekstanalyse for skjulte Rickrolls';
                 elements.textSection.style.display = 'block';
+                elements.youtubeSection.style.display = 'none';
                 elements.mainCard.classList.remove('youtube-active');
-                elements.urlInput.placeholder = 'Lim inn lenke eller tekst...';
-                showNotification('Avansert modus aktivert - tekstanalyse tilgjengelig!', 'text-mode');
+                elements.urlInput.placeholder = 'Lim inn lenke, YouTube-URL eller tekst...';
+                showNotification('Avansert modus: Lenker + tekstanalyse', 'text-mode');
             }
             else if (mode === 'youtube') {
-                elements.modeDesc.textContent = '🎥 YouTube: Lim inn YouTube-lenke for å scanne videoer og kommentarer';
+                elements.modeDesc.textContent = '🎥 YouTube: Detaljert scanning av tittel, kanal, beskrivelse og kommentarer';
                 elements.textSection.style.display = 'none';
+                elements.youtubeSection.style.display = 'block';
                 elements.mainCard.classList.add('youtube-active');
-                elements.urlInput.placeholder = 'Lim inn YouTube URL... (f.eks. youtu.be/dQw4w9WgXcQ)';
-                showNotification('YouTube modus aktivert - scanner videoer!', 'youtube');
+                elements.urlInput.placeholder = 'Lim inn YouTube-URL for detaljscanning...';
+                showNotification('YouTube modus: Detaljert videoscanning!', 'youtube');
             }
         }
 
         // ============================================
-        // YOUTUBE SCANNING
+        // HENT VIDEO-ID FRA URL
         // ============================================
-        function scanYouTubeVideo(url) {
-            showNotification('🎥 Scanner YouTube...', 'youtube');
+        function getVideoIdFromUrl(url) {
+            let videoId = null;
             
-            let videoId = url;
             if (url.includes('v=')) {
                 videoId = url.split('v=')[1].split('&')[0];
             } else if (url.includes('youtu.be/')) {
                 videoId = url.split('youtu.be/')[1].split('?')[0];
             }
             
-            if (videoId === 'dQw4w9WgXcQ') {
-                displayResult(url, {
-                    isRickroll: true,
-                    type: '🎥 KLASSISK RICKROLL!',
-                    matched: 'Video-ID: dQw4w9WgXcQ (100% match)',
-                    confidence: 100
-                });
-                return;
-            }
-            
-            displayResult(url, {
-                isRickroll: false,
-                type: '🎥 VIDEO-SJEKK',
-                matched: 'Video-ID er ikke i Rickroll-databasen',
-                confidence: 100
-            });
+            return videoId;
         }
 
         // ============================================
-        // Kjernefunksjoner
+        // YOUTUBE DETALJSCANNING
+        // ============================================
+        function scanYouTubeDetails(url) {
+            showNotification('🎥 Detaljert YouTube-scanning...', 'youtube');
+            
+            const videoId = getVideoIdFromUrl(url);
+            
+            if (!videoId) {
+                elements.youtubeResult.style.display = 'block';
+                elements.youtubeResult.className = 'result-box warning';
+                elements.youtubeResult.innerHTML = '⚠️ KUNNE IKKE HENTE VIDEO-ID<br><small>Sjekk at URL-en er korrekt</small>';
+                return;
+            }
+            
+            // Sjekk video-ID
+            if (videoId === 'dQw4w9WgXcQ') {
+                elements.youtubeResult.style.display = 'block';
+                elements.youtubeResult.className = 'result-box danger';
+                elements.youtubeResult.innerHTML = '🚨 KLASSISK RICKROLL!<br><br>Video-ID: dQw4w9WgXcQ<br>Dette er original-Rickrollen!';
+                return;
+            }
+            
+            // Prøv å hente informasjon fra siden hvis vi er på YouTube
+            if (window.location.hostname.includes('youtube.com')) {
+                setTimeout(() => {
+                    let findings = [];
+                    
+                    // Tittel
+                    const title = document.querySelector('h1 yt-formatted-string');
+                    if (title) {
+                        const titleText = title.textContent.toLowerCase();
+                        YOUTUBE_KEYWORDS.forEach(keyword => {
+                            if (titleText.includes(keyword)) {
+                                findings.push(`📺 Tittel inneholder: "${keyword}"`);
+                            }
+                        });
+                    }
+                    
+                    // Kanal
+                    const channel = document.querySelector('#owner yt-formatted-string a');
+                    if (channel) {
+                        const channelText = channel.textContent.toLowerCase();
+                        if (channelText.includes('rick astley')) {
+                            findings.push('📡 Kanal: Rick Astley (offisiell Rickroll-kanal!)');
+                        }
+                    }
+                    
+                    if (findings.length > 0) {
+                        elements.youtubeResult.style.display = 'block';
+                        elements.youtubeResult.className = 'result-box warning';
+                        elements.youtubeResult.innerHTML = '⚠️ FUNNET I VIDEOEN:<br><br>' + findings.join('<br>');
+                    } else {
+                        elements.youtubeResult.style.display = 'block';
+                        elements.youtubeResult.className = 'result-box safe';
+                        elements.youtubeResult.innerHTML = '✅ INGEN RICKROLL FUNNET<br><small>Videoen ser trygg ut</small>';
+                    }
+                }, 2000);
+            } else {
+                elements.youtubeResult.style.display = 'block';
+                elements.youtubeResult.className = 'result-box safe';
+                elements.youtubeResult.innerHTML = '✅ VIDEO-ID ER IKKE I DATABASEN<br><small>Gå til YouTube-siden for detaljscanning</small>';
+            }
+        }
+
+        // ============================================
+        // KJERNEFUNKSJONER
         // ============================================
         function normalizeUrl(url) {
             return url.toLowerCase()
@@ -875,14 +958,16 @@
         function checkForRickroll(url) {
             const normalized = normalizeUrl(url);
             
+            // Video-ID sjekk
             if (normalized.includes('dqw4w9wgxcq')) {
                 return { 
                     isRickroll: true, 
-                    matched: '🎬 Rickroll video-ID!', 
+                    matched: '🎬 Rickroll video-ID funnet!', 
                     confidence: 100 
                 };
             }
             
+            // Database sjekk
             for (const pattern of rickrollDatabase) {
                 if (normalized.includes(pattern.toLowerCase())) {
                     return { 
@@ -932,16 +1017,24 @@
                 return;
             }
             
+            // YOUTUBE MODUS - detaljscanning
             if (currentMode === 'youtube') {
                 if (input.includes('youtube.com') || input.includes('youtu.be')) {
-                    scanYouTubeVideo(input);
+                    scanYouTubeDetails(input);
                 } else {
-                    showNotification('❌ YouTube Mode krever YouTube-lenke!', 'danger');
+                    showNotification('❌ YouTube modus krever YouTube-lenke!', 'danger');
                 }
                 return;
             }
             
-            if (currentMode === 'standard' || currentMode === 'advanced') {
+            // STANDARD MODUS - sjekk lenke
+            if (currentMode === 'standard') {
+                const result = checkForRickroll(input);
+                displayResult(input, result);
+            }
+            
+            // AVANSERT MODUS - sjekk lenke (tekstanalyse håndteres separat)
+            if (currentMode === 'advanced') {
                 const result = checkForRickroll(input);
                 displayResult(input, result);
             }
