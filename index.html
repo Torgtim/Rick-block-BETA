@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚨 RICKROLL SHIELD ULTIMATE 🚨</title>
+    <title>🚨 RICKROLL SHIELD ULTIMATE - YOUTUBE SHORTS FIX 🚨</title>
     <style>
+        /* Samme CSS som før, behold alt! */
         :root {
             --bg: #0f172a;
             --card: #1e293b;
@@ -663,6 +664,11 @@
             transition: width 1s;
             border-radius: 10px;
         }
+        
+        /* Samme sted som Standard */
+        .youtube-result-container {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -671,7 +677,7 @@
     
     <div class="container">
         <header>
-            <div class="version-badge">🔥 ULTIMATE 8.0 - YOUTUBE SCANNER 🔥</div>
+            <div class="version-badge">🔥 ULTIMATE 8.1 - YOUTUBE SHORTS FIX 🔥</div>
             <h1>
                 <span>🛡️</span>
                 RICKROLL SHIELD
@@ -701,11 +707,15 @@
                 </div>
             </div>
             
+            <!-- Standard resultat (brukes for alle moduser!) -->
             <div id="resultBox" class="result-box">
                 <span id="resultEmoji" class="emoji-large">🤔</span>
                 <div id="resultText">Klar til scanning</div>
                 <div id="resultDetail" style="margin-top: 10px; font-size: 1rem;"></div>
             </div>
+            
+            <!-- YouTube video info (vises i resultBox for YouTube modus) -->
+            <div id="youtubeVideoDisplay" style="display: none;" class="video-info"></div>
             
             <div class="stats">
                 <div class="stat-box">
@@ -732,24 +742,6 @@
                 <button id="clearTextBtn" class="secondary-btn">🗑️ TØM</button>
             </div>
             <div id="textResultBox" class="result-box" style="display: none;"></div>
-        </div>
-        
-        <!-- YOUTUBE DETAILS (Kun i YouTube modus) -->
-        <div class="main-card" id="youtubeSection" style="display: none;">
-            <h3 style="color: #ff0000; margin-bottom: 15px;">🎥 YOUTUBE DETALJER</h3>
-            <p style="margin-bottom: 15px;">Scanner tittel, kanal og beskrivelse for Rickrolls</p>
-            
-            <!-- Loading spinner -->
-            <div id="youtubeLoading" style="display: none;">
-                <div class="loading-spinner"></div>
-                <p style="text-align: center; margin-top: 15px;">Henter video-data...</p>
-            </div>
-            
-            <!-- Result container -->
-            <div id="youtubeResult" style="display: none;"></div>
-            
-            <!-- Video display -->
-            <div id="youtubeVideoDisplay" style="display: none;" class="video-info"></div>
         </div>
         
         <!-- HISTORY -->
@@ -976,9 +968,6 @@
             checkTextBtn: document.getElementById('checkTextBtn'),
             clearTextBtn: document.getElementById('clearTextBtn'),
             textResultBox: document.getElementById('textResultBox'),
-            youtubeSection: document.getElementById('youtubeSection'),
-            youtubeResult: document.getElementById('youtubeResult'),
-            youtubeLoading: document.getElementById('youtubeLoading'),
             youtubeVideoDisplay: document.getElementById('youtubeVideoDisplay'),
             mainCard: document.getElementById('mainCard'),
             notification: document.getElementById('notification')
@@ -997,7 +986,6 @@
             if (mode === 'standard') {
                 elements.modeDesc.textContent = '🛡️ Standard: Sjekker ALLE lenker mot 100+ mønstre (inkludert YouTube)';
                 elements.textSection.style.display = 'none';
-                elements.youtubeSection.style.display = 'none';
                 elements.mainCard.classList.remove('youtube-active');
                 elements.urlInput.placeholder = 'Lim inn lenke eller YouTube-URL...';
                 showNotification('Standard modus: Sjekker alle lenker', 'primary');
@@ -1005,7 +993,6 @@
             else if (mode === 'advanced') {
                 elements.modeDesc.textContent = '⚡ Avansert: Sjekker alle lenker PLUSS tekstanalyse for skjulte Rickrolls';
                 elements.textSection.style.display = 'block';
-                elements.youtubeSection.style.display = 'none';
                 elements.mainCard.classList.remove('youtube-active');
                 elements.urlInput.placeholder = 'Lim inn lenke, YouTube-URL eller tekst...';
                 showNotification('Avansert modus: Lenker + tekstanalyse', 'text-mode');
@@ -1013,7 +1000,6 @@
             else if (mode === 'youtube') {
                 elements.modeDesc.textContent = '🎥 YouTube: Detaljert scanning av tittel, kanal og beskrivelse';
                 elements.textSection.style.display = 'none';
-                elements.youtubeSection.style.display = 'block';
                 elements.mainCard.classList.add('youtube-active');
                 elements.urlInput.placeholder = 'Lim inn YouTube-URL for detaljscanning...';
                 showNotification('YouTube modus: Detaljert videoscanning!', 'youtube');
@@ -1021,7 +1007,7 @@
         }
 
         // ============================================
-        // HENT VIDEO-ID FRA URL
+        // HENT VIDEO-ID FRA URL (MED SHORTS STØTTE!)
         // ============================================
         function getVideoIdFromUrl(url) {
             let videoId = null;
@@ -1042,12 +1028,16 @@
             else if (url.includes('/v/')) {
                 videoId = url.split('/v/')[1].split('?')[0];
             }
+            // YOUTUBE SHORTS! /shorts/dQw4w9WgXcQ
+            else if (url.includes('/shorts/')) {
+                videoId = url.split('/shorts/')[1].split('?')[0].split('&')[0];
+            }
             
             return videoId;
         }
 
         // ============================================
-        // YOUTUBE SCANNING - FUNKER UTEN CORS!
+        // YOUTUBE SCANNING - FUNKER MED SHORTS!
         // ============================================
         async function scanYouTubeDetails(url) {
             showNotification('🎥 Henter YouTube-info...', 'youtube');
@@ -1055,15 +1045,22 @@
             const videoId = getVideoIdFromUrl(url);
             
             if (!videoId) {
-                elements.youtubeResult.style.display = 'block';
-                elements.youtubeResult.className = 'result-box warning';
-                elements.youtubeResult.innerHTML = '⚠️ UGYLDIG YOUTUBE-URL<br><small>Kunne ikke finne video-ID</small>';
+                // Vis feil i resultBox (samme sted som Standard!)
+                elements.resultBox.style.display = 'block';
+                elements.resultBox.className = 'result-box warning';
+                elements.resultEmoji.textContent = '⚠️';
+                elements.resultText.textContent = 'UGYLDIG YOUTUBE-URL';
+                elements.resultDetail.innerHTML = 'Kunne ikke finne video-ID';
+                elements.youtubeVideoDisplay.style.display = 'none';
                 return;
             }
             
-            // Vis loading
-            elements.youtubeLoading.style.display = 'block';
-            elements.youtubeResult.style.display = 'none';
+            // Vis loading i resultBox
+            elements.resultBox.style.display = 'block';
+            elements.resultBox.className = 'result-box';
+            elements.resultEmoji.textContent = '🔄';
+            elements.resultText.textContent = 'HENTER VIDEO-DATA...';
+            elements.resultDetail.innerHTML = '<div class="loading-spinner" style="width:30px;height:30px;margin:10px auto;"></div>';
             elements.youtubeVideoDisplay.style.display = 'none';
             
             try {
@@ -1075,9 +1072,6 @@
                 }
                 
                 const data = await response.json();
-                
-                // Skjul loading
-                elements.youtubeLoading.style.display = 'none';
                 
                 // Hent thumbnail (flere størrelser)
                 const thumbnailMaxRes = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
@@ -1129,16 +1123,13 @@
                     resultDetails = `Fant: ${foundWords.join(', ')}`;
                 }
                 
-                // Vis resultat
-                elements.youtubeResult.style.display = 'block';
-                elements.youtubeResult.className = `result-box ${resultClass}`;
-                elements.youtubeResult.innerHTML = `
-                    <span style="font-size: 3rem;">${resultIcon}</span><br>
-                    <strong>${resultMessage}</strong><br>
-                    <small>${resultDetails}</small>
-                `;
+                // Oppdater resultBox (samme sted som Standard!)
+                elements.resultBox.className = `result-box ${resultClass}`;
+                elements.resultEmoji.textContent = resultIcon;
+                elements.resultText.textContent = resultMessage;
+                elements.resultDetail.innerHTML = resultDetails;
                 
-                // Vis video-info
+                // Vis video-info i youtubeVideoDisplay (under resultBox)
                 elements.youtubeVideoDisplay.style.display = 'block';
                 elements.youtubeVideoDisplay.innerHTML = `
                     <div class="thumbnail-container">
@@ -1181,10 +1172,12 @@
                 
             } catch (error) {
                 console.error('Feil:', error);
-                elements.youtubeLoading.style.display = 'none';
-                elements.youtubeResult.style.display = 'block';
-                elements.youtubeResult.className = 'result-box warning';
-                elements.youtubeResult.innerHTML = '⚠️ KUNNE IKKE HENTE VIDEO-DATA<br><small>Sjekk internett-tilkoblingen</small>';
+                elements.resultBox.style.display = 'block';
+                elements.resultBox.className = 'result-box warning';
+                elements.resultEmoji.textContent = '⚠️';
+                elements.resultText.textContent = 'KUNNE IKKE HENTE DATA';
+                elements.resultDetail.innerHTML = 'Sjekk internett-tilkoblingen';
+                elements.youtubeVideoDisplay.style.display = 'none';
             }
         }
 
@@ -1261,7 +1254,10 @@
                 return;
             }
             
-            // YOUTUBE MODUS - detaljscanning
+            // Skjul YouTube video display som standard
+            elements.youtubeVideoDisplay.style.display = 'none';
+            
+            // YOUTUBE MODUS - detaljscanning (støtter shorts!)
             if (currentMode === 'youtube') {
                 if (input.includes('youtube.com') || input.includes('youtu.be')) {
                     scanYouTubeDetails(input);
@@ -1277,7 +1273,7 @@
                 displayResult(input, result);
             }
             
-            // AVANSERT MODUS - sjekk lenke (tekstanalyse håndteres separat)
+            // AVANSERT MODUS - sjekk lenke
             if (currentMode === 'advanced') {
                 const result = checkForRickroll(input);
                 displayResult(input, result);
@@ -1407,10 +1403,10 @@
         function testRandomRickroll() {
             const testUrls = [
                 'https://youtu.be/dQw4w9WgXcQ',
+                'https://youtube.com/shorts/dQw4w9WgXcQ',
                 'https://bit.ly/3t0x1mz',
                 'https://rickroll.it',
-                'https://tinyurl.com/rickroll',
-                'https://nevergonnagiveyouup.com'
+                'https://tinyurl.com/rickroll'
             ];
             elements.urlInput.value = testUrls[Math.floor(Math.random() * testUrls.length)];
             performCheck();
@@ -1526,7 +1522,7 @@
             });
             
             updateUI();
-            showNotification('🛡️ Rickroll Shield ULTIMATE med YouTube-scanning klar!', 'primary');
+            showNotification('🛡️ Rickroll Shield ULTIMATE - YouTube Shorts støtte!', 'primary');
             
             // Show database size
             elements.patternCount.textContent = rickrollDatabase.length;
