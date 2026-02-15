@@ -47,7 +47,6 @@
             padding: 20px 0;
         }
         
-        /* HEADER */
         header {
             text-align: center;
             margin-bottom: 25px;
@@ -118,7 +117,6 @@
             text-shadow: 0 0 10px rgba(255,255,255,0.3);
         }
         
-        /* MODE SELECTOR */
         .mode-container {
             display: flex;
             gap: 10px;
@@ -190,7 +188,6 @@
             backdrop-filter: blur(5px);
         }
         
-        /* CARDS */
         .main-card {
             background: rgba(30, 41, 59, 0.8);
             backdrop-filter: blur(10px);
@@ -301,7 +298,6 @@
         .secondary-btn { background: linear-gradient(135deg, #475569, #1e293b); }
         .danger-btn { background: linear-gradient(135deg, #ef4444, #7f1d1d); }
         
-        /* RESULT BOX */
         .result-box {
             padding: 30px;
             border-radius: 20px;
@@ -344,7 +340,6 @@
             border-color: #fed7aa;
         }
         
-        /* STATS */
         .stats {
             display: flex;
             justify-content: space-around;
@@ -383,7 +378,6 @@
             text-shadow: 0 0 20px currentColor;
         }
         
-        /* HISTORY */
         .history-section {
             margin-top: 40px;
         }
@@ -417,7 +411,6 @@
         .history-danger { border-left-color: var(--danger); }
         .history-youtube { border-left-color: var(--youtube); }
         
-        /* FLOATING BUTTON */
         .floating-btn {
             position: fixed;
             bottom: 30px;
@@ -446,7 +439,6 @@
             box-shadow: 0 15px 40px rgba(124, 58, 237, 0.8);
         }
         
-        /* NOTIFICATION */
         .notification {
             position: fixed;
             top: 30px;
@@ -468,7 +460,6 @@
             to { transform: translateX(0); opacity: 1; }
         }
         
-        /* EDITOR */
         .editor-section {
             display: none;
         }
@@ -520,6 +511,158 @@
             from { transform: rotate(0deg) scale(0); }
             to { transform: rotate(360deg) scale(1); }
         }
+
+        /* YouTube-spesifikk styling */
+        .youtube-card {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+            animation: youtubePulse 2s infinite;
+        }
+        
+        @keyframes youtubePulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,0,0,0.3); }
+            50% { box-shadow: 0 0 40px rgba(255,0,0,0.7); }
+        }
+        
+        .video-info {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            color: #333;
+            margin-top: 15px;
+        }
+        
+        .video-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .video-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .channel-badge {
+            background: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .channel-badge.rickroll-channel {
+            background: #ff0000;
+            color: white;
+            animation: channelAlert 1.5s infinite;
+        }
+        
+        @keyframes channelAlert {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .thumbnail-container {
+            width: 100%;
+            max-width: 480px;
+            margin: 15px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 3px solid #ff0000;
+        }
+        
+        .thumbnail-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .description-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            max-height: 150px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .scan-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+        
+        .scan-status.risk {
+            background: #ff0000;
+            color: white;
+        }
+        
+        .scan-status.safe {
+            background: #10b981;
+            color: white;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #ff0000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .keyword-highlight {
+            background: #ff0000;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin: 2px;
+            animation: keywordPulse 2s infinite;
+        }
+        
+        @keyframes keywordPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        
+        .confidence-meter {
+            width: 100%;
+            height: 20px;
+            background: #eee;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff6b6b);
+            transition: width 1s;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -528,7 +671,7 @@
     
     <div class="container">
         <header>
-            <div class="version-badge">🔥 ULTIMATE 7.0 🔥</div>
+            <div class="version-badge">🔥 ULTIMATE 8.0 - YOUTUBE SCANNER 🔥</div>
             <h1>
                 <span>🛡️</span>
                 RICKROLL SHIELD
@@ -594,8 +737,19 @@
         <!-- YOUTUBE DETAILS (Kun i YouTube modus) -->
         <div class="main-card" id="youtubeSection" style="display: none;">
             <h3 style="color: #ff0000; margin-bottom: 15px;">🎥 YOUTUBE DETALJER</h3>
-            <p style="margin-bottom: 15px;">Scanner tittel, kanal, beskrivelse og kommentarer for Rickrolls</p>
-            <div id="youtubeResult" class="result-box" style="display: none;"></div>
+            <p style="margin-bottom: 15px;">Scanner tittel, kanal og beskrivelse for Rickrolls</p>
+            
+            <!-- Loading spinner -->
+            <div id="youtubeLoading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p style="text-align: center; margin-top: 15px;">Henter video-data...</p>
+            </div>
+            
+            <!-- Result container -->
+            <div id="youtubeResult" style="display: none;"></div>
+            
+            <!-- Video display -->
+            <div id="youtubeVideoDisplay" style="display: none;" class="video-info"></div>
         </div>
         
         <!-- HISTORY -->
@@ -760,6 +914,19 @@
             "exclusive-content.net"
         ];
 
+        // Rickroll-ord og uttrykk
+        const RICKROLL_PHRASES = [
+            'rick astley', 'never gonna give you up', 'never gonna let you down',
+            'never gonna run around', 'desert you', 'rickroll', 'rick roll',
+            'dqw4w9wgxcq', 'together forever', 'know the rules', 'and so do i',
+            'official video', 'rick astley official', '80s music', '1987',
+            'whenever you need me', 'never gonna make you cry',
+            'never gonna say goodbye', 'never gonna tell a lie', 'never gonna hurt you',
+            'rick astley - never gonna give you up', 'rickrolled', 'rick rolling',
+            '#rickroll', '#rickastley', '#nevergonnagiveyouup', '80s classic',
+            'best 80s song', 'original rickroll', 'the rickroll song'
+        ];
+
         // Nøkkelord for tekstanalyse
         const TEXT_KEYWORDS = [
             { word: 'rickroll', confidence: 85 },
@@ -778,20 +945,7 @@
             { word: 'dqw4w9wgxcq', confidence: 100 },
             { word: 'rick roll', confidence: 85 },
             { word: 'rickrolled', confidence: 90 },
-            { word: 'rick rolling', confidence: 85 },
-            { word: 'rickroll 2024', confidence: 80 },
-            { word: 'original rickroll', confidence: 90 }
-        ];
-
-        // YouTube nøkkelord for detaljscanning
-        const YOUTUBE_KEYWORDS = [
-            'rick astley',
-            'never gonna give you up',
-            'rickroll',
-            'dQw4w9WgXcQ',
-            'rick rolled',
-            'official video',
-            'rick astley official'
+            { word: 'rick rolling', confidence: 85 }
         ];
 
         // State
@@ -824,6 +978,8 @@
             textResultBox: document.getElementById('textResultBox'),
             youtubeSection: document.getElementById('youtubeSection'),
             youtubeResult: document.getElementById('youtubeResult'),
+            youtubeLoading: document.getElementById('youtubeLoading'),
+            youtubeVideoDisplay: document.getElementById('youtubeVideoDisplay'),
             mainCard: document.getElementById('mainCard'),
             notification: document.getElementById('notification')
         };
@@ -855,7 +1011,7 @@
                 showNotification('Avansert modus: Lenker + tekstanalyse', 'text-mode');
             }
             else if (mode === 'youtube') {
-                elements.modeDesc.textContent = '🎥 YouTube: Detaljert scanning av tittel, kanal, beskrivelse og kommentarer';
+                elements.modeDesc.textContent = '🎥 YouTube: Detaljert scanning av tittel, kanal og beskrivelse';
                 elements.textSection.style.display = 'none';
                 elements.youtubeSection.style.display = 'block';
                 elements.mainCard.classList.add('youtube-active');
@@ -870,77 +1026,165 @@
         function getVideoIdFromUrl(url) {
             let videoId = null;
             
-            if (url.includes('v=')) {
+            // youtu.be/dQw4w9WgXcQ
+            if (url.includes('youtu.be/')) {
+                videoId = url.split('youtu.be/')[1].split('?')[0].split('&')[0];
+            }
+            // youtube.com/watch?v=dQw4w9WgXcQ
+            else if (url.includes('v=')) {
                 videoId = url.split('v=')[1].split('&')[0];
-            } else if (url.includes('youtu.be/')) {
-                videoId = url.split('youtu.be/')[1].split('?')[0];
+            }
+            // youtube.com/embed/dQw4w9WgXcQ
+            else if (url.includes('/embed/')) {
+                videoId = url.split('/embed/')[1].split('?')[0];
+            }
+            // youtube.com/v/dQw4w9WgXcQ
+            else if (url.includes('/v/')) {
+                videoId = url.split('/v/')[1].split('?')[0];
             }
             
             return videoId;
         }
 
         // ============================================
-        // YOUTUBE DETALJSCANNING
+        // YOUTUBE SCANNING - FUNKER UTEN CORS!
         // ============================================
-        function scanYouTubeDetails(url) {
-            showNotification('🎥 Detaljert YouTube-scanning...', 'youtube');
+        async function scanYouTubeDetails(url) {
+            showNotification('🎥 Henter YouTube-info...', 'youtube');
             
             const videoId = getVideoIdFromUrl(url);
             
             if (!videoId) {
                 elements.youtubeResult.style.display = 'block';
                 elements.youtubeResult.className = 'result-box warning';
-                elements.youtubeResult.innerHTML = '⚠️ KUNNE IKKE HENTE VIDEO-ID<br><small>Sjekk at URL-en er korrekt</small>';
+                elements.youtubeResult.innerHTML = '⚠️ UGYLDIG YOUTUBE-URL<br><small>Kunne ikke finne video-ID</small>';
                 return;
             }
             
-            // Sjekk video-ID
-            if (videoId === 'dQw4w9WgXcQ') {
-                elements.youtubeResult.style.display = 'block';
-                elements.youtubeResult.className = 'result-box danger';
-                elements.youtubeResult.innerHTML = '🚨 KLASSISK RICKROLL!<br><br>Video-ID: dQw4w9WgXcQ<br>Dette er original-Rickrollen!';
-                return;
-            }
+            // Vis loading
+            elements.youtubeLoading.style.display = 'block';
+            elements.youtubeResult.style.display = 'none';
+            elements.youtubeVideoDisplay.style.display = 'none';
             
-            // Prøv å hente informasjon fra siden hvis vi er på YouTube
-            if (window.location.hostname.includes('youtube.com')) {
-                setTimeout(() => {
-                    let findings = [];
-                    
-                    // Tittel
-                    const title = document.querySelector('h1 yt-formatted-string');
-                    if (title) {
-                        const titleText = title.textContent.toLowerCase();
-                        YOUTUBE_KEYWORDS.forEach(keyword => {
-                            if (titleText.includes(keyword)) {
-                                findings.push(`📺 Tittel inneholder: "${keyword}"`);
-                            }
-                        });
+            try {
+                // Bruk oEmbed API (dette fungerer ALLTID, ingen CORS!)
+                const response = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
+                
+                if (!response.ok) {
+                    throw new Error('Kunne ikke hente video-data');
+                }
+                
+                const data = await response.json();
+                
+                // Skjul loading
+                elements.youtubeLoading.style.display = 'none';
+                
+                // Hent thumbnail (flere størrelser)
+                const thumbnailMaxRes = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+                const thumbnailHigh = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                
+                // Sjekk om det er Rickroll basert på video-ID
+                const isExactRickroll = videoId.toLowerCase() === 'dqw4w9wgxcq';
+                
+                // Sjekk tittel for Rickroll-ord
+                const title = data.title.toLowerCase();
+                let foundWords = [];
+                let confidence = 0;
+                
+                RICKROLL_PHRASES.forEach(phrase => {
+                    if (title.includes(phrase)) {
+                        foundWords.push(phrase);
+                        confidence += 20;
                     }
-                    
-                    // Kanal
-                    const channel = document.querySelector('#owner yt-formatted-string a');
-                    if (channel) {
-                        const channelText = channel.textContent.toLowerCase();
-                        if (channelText.includes('rick astley')) {
-                            findings.push('📡 Kanal: Rick Astley (offisiell Rickroll-kanal!)');
-                        }
-                    }
-                    
-                    if (findings.length > 0) {
-                        elements.youtubeResult.style.display = 'block';
-                        elements.youtubeResult.className = 'result-box warning';
-                        elements.youtubeResult.innerHTML = '⚠️ FUNNET I VIDEOEN:<br><br>' + findings.join('<br>');
-                    } else {
-                        elements.youtubeResult.style.display = 'block';
-                        elements.youtubeResult.className = 'result-box safe';
-                        elements.youtubeResult.innerHTML = '✅ INGEN RICKROLL FUNNET<br><small>Videoen ser trygg ut</small>';
-                    }
-                }, 2000);
-            } else {
+                });
+                
+                // Sjekk kanalnavn
+                const channel = data.author_name.toLowerCase();
+                if (channel.includes('rick astley') || channel.includes('rickastley')) {
+                    foundWords.push('🎤 Rick Astley kanal!');
+                    confidence += 40;
+                }
+                
+                // Bestem resultat
+                let resultClass = 'safe';
+                let resultMessage = '✅ INGEN RICKROLL FUNNET';
+                let resultIcon = '✅';
+                let resultDetails = '';
+                
+                if (isExactRickroll) {
+                    resultClass = 'danger';
+                    resultMessage = '🚨 ORIGINAL RICKROLL! 🚨';
+                    resultIcon = '🚨🚨🚨';
+                    resultDetails = 'Dette er den originale Rickroll-videoen!';
+                    confidence = 100;
+                } else if (confidence >= 50) {
+                    resultClass = 'danger';
+                    resultMessage = '⚠️ HØY RISIKO FOR RICKROLL!';
+                    resultIcon = '🚨';
+                    resultDetails = `Fant ${foundWords.length} tegn på Rickroll`;
+                } else if (confidence >= 20) {
+                    resultClass = 'warning';
+                    resultMessage = '⚠️ MISTENKELIG';
+                    resultIcon = '⚠️';
+                    resultDetails = `Fant: ${foundWords.join(', ')}`;
+                }
+                
+                // Vis resultat
                 elements.youtubeResult.style.display = 'block';
-                elements.youtubeResult.className = 'result-box safe';
-                elements.youtubeResult.innerHTML = '✅ VIDEO-ID ER IKKE I DATABASEN<br><small>Gå til YouTube-siden for detaljscanning</small>';
+                elements.youtubeResult.className = `result-box ${resultClass}`;
+                elements.youtubeResult.innerHTML = `
+                    <span style="font-size: 3rem;">${resultIcon}</span><br>
+                    <strong>${resultMessage}</strong><br>
+                    <small>${resultDetails}</small>
+                `;
+                
+                // Vis video-info
+                elements.youtubeVideoDisplay.style.display = 'block';
+                elements.youtubeVideoDisplay.innerHTML = `
+                    <div class="thumbnail-container">
+                        <img src="${thumbnailMaxRes}" 
+                             onerror="this.src='${thumbnailHigh}'"
+                             alt="Video thumbnail">
+                    </div>
+                    
+                    <div class="video-title">${data.title}</div>
+                    
+                    <div class="video-meta">
+                        <span class="channel-badge ${channel.includes('rick') ? 'rickroll-channel' : ''}">
+                            📺 ${data.author_name}
+                        </span>
+                        <span class="scan-status ${resultClass === 'danger' ? 'risk' : 'safe'}">
+                            ${resultClass === 'danger' ? '⚠️ RISIKO' : '✅ TRYGG'}
+                        </span>
+                    </div>
+                    
+                    <div class="confidence-meter">
+                        <div class="confidence-fill" style="width: ${confidence}%"></div>
+                    </div>
+                    
+                    <div style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">
+                        Tillit: ${confidence}% | Video-ID: ${videoId}
+                    </div>
+                    
+                    <div style="margin-top: 15px; text-align: center;">
+                        <a href="https://youtu.be/${videoId}" target="_blank" style="color: #ff0000; text-decoration: none; font-weight: bold;">
+                            🔗 Åpne på YouTube 🔗
+                        </a>
+                    </div>
+                `;
+                
+                // Legg til i historikk
+                addToHistory(`YouTube: ${data.title.substring(0, 30)}...`, 
+                    { isRickroll: isExactRickroll || confidence >= 50, type: 'YOUTUBE' }, 
+                    new Date().toLocaleTimeString(), 
+                    isExactRickroll ? '🚨' : (confidence >= 20 ? '⚠️' : '✅'));
+                
+            } catch (error) {
+                console.error('Feil:', error);
+                elements.youtubeLoading.style.display = 'none';
+                elements.youtubeResult.style.display = 'block';
+                elements.youtubeResult.className = 'result-box warning';
+                elements.youtubeResult.innerHTML = '⚠️ KUNNE IKKE HENTE VIDEO-DATA<br><small>Sjekk internett-tilkoblingen</small>';
             }
         }
 
@@ -1022,7 +1266,7 @@
                 if (input.includes('youtube.com') || input.includes('youtu.be')) {
                     scanYouTubeDetails(input);
                 } else {
-                    showNotification('❌ YouTube modus krever YouTube-lenke!', 'danger');
+                    showNotification('❌ YouTube modus krever gyldig YouTube-lenke!', 'danger');
                 }
                 return;
             }
@@ -1078,7 +1322,7 @@
                 emoji = '🚨🚨🚨';
                 text = '⚠️ RICKROLL OPPDAGET! ⚠️';
                 cssClass = 'danger';
-                detail = result.matched + ' | ' + result.confidence + '% match';
+                detail = result.matched + ' | ' + (result.confidence || 95) + '% match';
                 rickrollsFound++;
                 
                 // Spill lyd (valgfritt)
@@ -1197,7 +1441,7 @@
             if (lines.length > 0) {
                 rickrollDatabase = [...new Set(lines)];
                 updateUI();
-                showNotification(`✅ Database lagret med ${rickrollDatabase.length} mønstre!`, 'success');
+                showNotification(`✅ Database lagret med ${rickrollDatabase.length} mønstre!`, 'primary');
             }
         }
 
@@ -1245,7 +1489,7 @@
                         if (data.database && Array.isArray(data.database)) {
                             rickrollDatabase = [...new Set([...rickrollDatabase, ...data.database])];
                             updateUI();
-                            showNotification(`📥 Importert ${data.database.length} nye mønstre!`, 'success');
+                            showNotification(`📥 Importert ${data.database.length} nye mønstre!`, 'primary');
                         }
                     } catch (err) {
                         showNotification('Feil ved import!', 'danger');
@@ -1282,7 +1526,7 @@
             });
             
             updateUI();
-            showNotification('🛡️ Rickroll Shield ULTIMATE klar!', 'success');
+            showNotification('🛡️ Rickroll Shield ULTIMATE med YouTube-scanning klar!', 'primary');
             
             // Show database size
             elements.patternCount.textContent = rickrollDatabase.length;
